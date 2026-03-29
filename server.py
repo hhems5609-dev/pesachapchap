@@ -1,9 +1,16 @@
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+import os
+from flask import Flask, render_template
 
-PORT = 8080
+app = Flask(__name__)
 
-Handler = SimpleHTTPRequestHandler
+@app.route("/")
+def home():
+    return "Welcome to Pesachapchap!"
 
-with HTTPServer(("0.0.0.0", PORT), Handler) as httpd:
-    print(f"Serving on port {PORT}")
-    httpd.serve_forever()
+@app.route("/hello")
+def hello():
+    return "Hello from your original app!"
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
