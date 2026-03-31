@@ -9,6 +9,13 @@
 :root{--bg:#0d0d1a;--panel:#141428;--card:#1a1a35;--border:#2a2a50;--acc:#e53935;--green:#00e676;--gd:#00c853;--yellow:#ffd600;--purple:#7c4dff;--blue:#40c4ff;--orange:#ff9800;--text:#e0e0ff;--muted:#5a5a90;--r:12px;}
 *{box-sizing:border-box;margin:0;padding:0;}html,body{height:100%;overflow-x:hidden;}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;}
+#splash {
+    animation: forceHide 0.5s forwards !important;
+    animation-delay: 5s !important; /* Automatically fades after 5 seconds */
+}
+@keyframes forceHide {
+    to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
 
 /* AUTH */
 .auth-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background-image:radial-gradient(ellipse at 50% 30%,#1a0a30 0%,#0d0d1a 70%);}
@@ -374,21 +381,6 @@ body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;fo
   <div class="splash-quote">Welcome to Winners Hub</div>
   <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
   <div class="splash-loading">LOADING...</div>
-</div>
-
-
-<!-- ══ SPLASH SCREEN ══ -->
-<div class="splash" id="splashScreen">
-  <div class="splash-bg"></div>
-  <div class="splash-stars" id="splashStars"></div>
-  <div class="splash-plane">✈</div>
-  <div class="splash-title">
-    <span class="red">PESA</span>&nbsp;<span class="wht">CHAPCHAP</span>
-  </div>
-  <div class="splash-domain">PESACHAPCHAP.COM</div>
-  <div class="splash-quote">Welcome to Winners Hub</div>
-  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
-  <div class="splash-tagline">LOADING&nbsp;&#183;&nbsp;PLEASE WAIT...</div>
 </div>
 
 
