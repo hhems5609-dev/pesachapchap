@@ -3,186 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Sports Betting Hub</title>
+    <title>Pesa ChapChap | Sports</title>
     <style>
-        /* Color Palette and Global Styles */
-        :root {
-            --bg: #0d121c; /* Betika Dark Background */
-            --primary: #ffee00; /* Main Yellow Accents */
-            --text-main: #ffffff;
-            --text-muted: #8c8f94;
-            --border: #242a36;
-            --odds-bg: #242a36;
+        :root { --bg: #0d121c; --primary: #ffee00; --text: #fff; --card: #1a1e29; --border: #242a36; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding-bottom: 100px; }
+        
+        /* Header & Balance */
+        header { background: #0b0f16; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 900; font-size: 1.2rem; }
+        .logo span { color: var(--primary); }
+        .bal { background: var(--primary); color: #000; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+
+        /* Match Styles */
+        .match-card { padding: 15px; border-bottom: 1px solid var(--border); }
+        .match-info { font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+        .teams { font-weight: bold; font-size: 1rem; margin-bottom: 10px; line-height: 1.4; }
+        .odds-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        
+        /* The Betting Button */
+        .odd-btn { 
+            background: #242a36; border: 1px solid var(--border); color: white; 
+            padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;
+            transition: 0.2s;
         }
-        
-        body { background: var(--bg); color: var(--text-main); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; padding-bottom: 70px; overflow-x: hidden; }
-        a { text-decoration: none; color: inherit; }
+        .odd-btn:active { background: var(--primary); color: #000; transform: scale(0.95); }
+        .odd-btn.selected { background: var(--primary); color: #000; border-color: var(--primary); }
 
-        /* HEADER: Logo & Top Right Icons */
-        header { background: #0b0f16; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; position: sticky; top: 0; z-index: 1000; }
-        .burger-icon { color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
-        .logo { color: var(--text-main); font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; }
-        .logo-chap { color: var(--primary); font-weight: 900; }
-        .logo-dot { color: #f21818; }
-        .header-icons { display: flex; gap: 15px; align-items: center; color: var(--text-main); font-size: 1.2rem; }
-        .balance-box { background: #ffee00; color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; }
+        /* Floating Betslip */
+        #betslip { 
+            position: fixed; bottom: 70px; left: 5%; width: 90%; 
+            background: #ffee00; color: #000; padding: 15px; 
+            border-radius: 10px; display: none; flex-direction: column; 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5); z-index: 1000;
+        }
+        .slip-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; }
+        .bet-input { width: 100%; padding: 10px; border: 1px solid #000; border-radius: 5px; margin-bottom: 10px; font-size: 1rem; }
+        .place-btn { background: #000; color: #fff; border: none; padding: 12px; border-radius: 5px; font-weight: bold; width: 100%; }
 
-        /* TABS: Horizontally Scrolling Top Menu */
-        .tabs-nav { background: #0b0f16; border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; display: flex; padding: 10px 10px; gap: 10px; scroll-behavior: smooth; }
-        .tabs-nav::-webkit-scrollbar { display: none; } /* Hide Scrollbar */
-        .tab-item { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 60px; padding: 5px; color: var(--text-muted); font-size: 0.7rem; border-radius: 8px; font-weight: bold; }
-        .tab-item.active { color: var(--primary); }
-        .tab-icon { font-size: 1.4rem; margin-bottom: 3px; position: relative; }
-        .tab-new-tag { position: absolute; top: -8px; right: -15px; background: #f21818; color: white; font-size: 0.5rem; padding: 1px 4px; border-radius: 10px; font-weight: bold; }
-
-        /* BANNER (Simulating the Midweek Jackpot) */
-        .promo-banner { background: linear-gradient(135deg, #ffee00 0%, #00d436 100%); color: black; font-weight: 800; text-align: center; padding: 25px 15px; font-size: 1.5rem; text-transform: uppercase; border-radius: 10px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .promo-banner .title { color: #f21818; }
-        .promo-banner .amount { color: #f21818; font-size: 2rem; }
-
-        /* FILTERS BAR */
-        .filters-bar { background: #0b0f16; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 8px 15px; color: var(--text-muted); font-size: 0.8rem; font-weight: bold; overflow-x: auto; gap: 15px; }
-        .filter-item { padding: 4px 8px; border-radius: 6px; }
-        .filter-item.active { background: #181d28; color: var(--primary); }
-        .filter-arrow { font-size: 0.6rem; color: #555; margin-left: 3px; }
-
-        /* ODDS LIST: Brazil vs Croatia etc. */
-        .odds-list { padding: 10px; }
-        .match-card { border-bottom: 1px solid var(--border); padding: 15px 0; }
-        .match-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; align-items: center; }
-        .match-teams { color: var(--text-main); font-weight: bold; font-size: 1rem; margin-bottom: 10px; }
-        .match-odds-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        .odd-bubble { background: var(--odds-bg); border-radius: 10px; border: 1px solid var(--border); color: var(--text-main); font-weight: bold; padding: 10px; text-align: center; font-size: 0.95rem; display: flex; justify-content: center; align-items: center; height: 35px; }
-        .odd-label { color: var(--text-muted); font-size: 0.7rem; font-weight: normal; margin-right: 5px; display: none;} /* Betika hides this in main view */
-        
-        /* BOTTOM NAV BAR (Betika Style) */
-        .bottom-nav { background: #0d121c; border-top: 1px solid var(--border); position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--text-muted); font-size: 0.7rem; font-weight: bold; }
-        .nav-link.active { color: var(--primary); }
-        .nav-icon { font-size: 1.4rem; margin-bottom: 3px; }
-        .betslip-bubble { position: absolute; background: var(--primary); color: #000; border-radius: 50%; font-size: 0.65rem; padding: 2px 6px; top: -10px; right: -15px; font-weight: 800; }
+        /* Bottom Nav */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #0b0f16; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); }
+        .nav-item { color: #888; text-decoration: none; font-size: 0.7rem; text-align: center; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="burger-icon">☰</div>
-    <div class="logo">
-        <span>PESA </span>
-        <span class="logo-chap"> CHAPCHAP</span>
-        <span class="logo-dot">●</span><span class="logo-chap">com</span>
-    </div>
-    <div class="header-icons">
-        <div class="balance-box">KES <span id="userBal">0.00</span></div>
-        <span>🔍</span>
-        <span>🔔</span>
-    </div>
+    <div class="logo">PESA<span>CHAPCHAP</span></div>
+    <div class="bal">KES <span id="displayBal">0.00</span></div>
 </header>
 
-<div class="tabs-nav">
-    <a href="/sports" class="tab-item active">
-        <span class="tab-icon">⚽</span>
-        <span>Soccer</span>
-    </a>
-    <a href="#" class="tab-item" onclick="alert('Coming Soon')">
-        <span class="tab-icon">🏆</span>
-        <span>Ligi Bigi</span>
-    </a>
-    <a href="#" class="tab-item" onclick="alert('Coming Soon')">
-        <span class="tab-icon">🏇<span class="tab-new-tag">New</span></span>
-        <span>Virtuals</span>
-    </a>
-    <a href="/play" class="tab-item">
-        <span class="tab-icon">🚀</span>
-        <span>Aviator</span>
-    </a>
-    <a href="#" class="tab-item" onclick="alert('Coming Soon')">
-        <span class="tab-icon">🎲</span>
-        <span>Casino</span>
-    </a>
-</div>
-
-<div class="promo-banner">
-    <span class="title">🏆 OMOKA NA MIDWEEK</span><br>
-    <span class="amount">15 MILLION</span><br>
-    <span>JACKPOT!</span>
-</div>
-
-<div class="filters-bar">
-    <div class="filter-item active">⚽ Highlights <span class="filter-arrow">▼</span></div>
-    <div class="filter-item">Upcoming</div>
-    <div class="filter-item">Countries</div>
-    <div class="filter-item">Filters <span class="filter-arrow">▼</span></div>
-</div>
-
-<div class="odds-list">
-    <div class="match-card">
-        <div class="match-teams">
-            Brazil<br>Croatia
-        </div>
-        <div class="match-meta">
-            <span>🌍 International • Int. Friendly</span>
-            <span>01/04, 03:00</span>
-        </div>
-        <div class="match-odds-grid">
-            <div class="odd-bubble">1.78</div>
-            <div class="odd-bubble">3.90</div>
-            <div class="odd-bubble">4.10</div>
-        </div>
+<div id="matchList">
     </div>
-    <div class="match-card">
-        <div class="match-teams">
-            Mexico<br>Belgium
-        </div>
-        <div class="match-meta">
-            <span>🌍 International • Int. Friendly</span>
-            <span>01/04, 04:00</span>
-        </div>
-        <div class="match-odds-grid">
-            <div class="odd-bubble">3.60</div>
-            <div class="odd-bubble">3.50</div>
-            <div class="odd-bubble">2.02</div>
-        </div>
+
+<div id="betslip">
+    <div class="slip-row">
+        <span id="slipMatch">Match Name</span>
+        <span id="slipOdd">0.00</span>
     </div>
-    <div class="match-card">
-        <div class="match-teams">
-            USA<br>Portugal
-        </div>
-        <div class="match-meta">
-            <span>🌍 International • Int. Friendly</span>
-            <span>01/04, 02:00</span>
-        </div>
-        <div class="match-odds-grid">
-            <div class="odd-bubble">4.70</div>
-            <div class="odd-bubble">4.20</div>
-            <div class="odd-bubble">1.63</div>
-        </div>
+    <input type="number" id="stake" class="bet-input" placeholder="Enter Stake (Min 10)" oninput="updateWin()">
+    <div class="slip-row">
+        <span>Possible Win:</span>
+        <span id="posWin">0.00</span>
     </div>
+    <button class="place-btn" onclick="placeBet()">PLACE BET</button>
 </div>
 
-<div class="bottom-nav">
-    <a href="/" class="nav-link active">
-        <span class="nav-icon">🏠</span>
-        <span>Home</span>
-    </a>
-    <a href="/live" class="nav-link">
-        <span class="nav-icon">⏱️</span>
-        <span>Live</span>
-    </a>
-    <a href="/deposit" class="nav-link" style="position: relative;">
-        <span class="nav-icon" style="font-size: 2rem; background: var(--primary); color:black; border-radius: 50%; padding: 5px; border:3px solid black; position: absolute; top:-30px;">💳</span>
-        <span style="margin-top:20px">Deposit</span>
-    </a>
-    <a href="/mybets" class="nav-link">
-        <span class="nav-icon">📋</span>
-        <span>My Bets</span>
-    </a>
-    <a href="/admin" class="nav-link">
-        <span class="nav-icon">👤</span>
-        <span>Profile</span>
-    </a>
+<div class="nav">
+    <a href="/" class="nav-item">🏠<br>Home</a>
+    <a href="/play" class="nav-item">🚀<br>Aviator</a>
+    <a href="/deposit" class="nav-item">💳<br>Deposit</a>
+    <a href="/admin" class="nav-item">👤<br>Account</a>
 </div>
 
-<script>document.getElementById('userBal').innerText = localStorage.getItem('pesa_balance') || '0.00';</script>
+<script>
+    let currentBalance = parseFloat(localStorage.getItem('pesa_balance') || 0);
+    document.getElementById('displayBal').innerText = currentBalance.toFixed(2);
+
+    const matches = [
+        { id: 1, teams: "Chelsea vs Liverpool", time: "Today, 20:00", odds: [2.50, 3.20, 2.80] },
+        { id: 2, teams: "Arsenal vs Man City", time: "Today, 22:30", odds: [3.10, 3.50, 2.10] },
+        { id: 3, teams: "Real Madrid vs Barcelona", time: "Tomorrow, 21:00", odds: [1.90, 3.80, 4.20] },
+        { id: 4, teams: "Gor Mahia vs AFC Leopards", time: "Sunday, 15:00", odds: [1.75, 2.90, 5.00] },
+        { id: 5, teams: "Bayern vs Dortmund", time: "Tomorrow, 19:30", odds: [1.50, 4.50, 6.00] }
+    ];
+
+    let selectedOdd = 0;
+    let selectedMatch = "";
+
+    function loadMatches() {
+        const container = document.getElementById('matchList');
+        matches.forEach(m => {
+            container.innerHTML += `
+                <div class="match-card">
+                    <div class="match-info">⚽ International • ${m.time}</div>
+                    <div class="match-teams">${m.teams.replace(' vs ', '<br>')}</div>
+                    <div class="odds-row">
+                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[0]}, this)">${m.odds[0]}</div>
+                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[1]}, this)">${m.odds[1]}</div>
+                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[2]}, this)">${m.odds[2]}</div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function openSlip(teams, odd, element) {
+        // Deselect others
+        document.querySelectorAll('.odd-btn').forEach(btn => btn.classList.remove('selected'));
+        element.classList.add('selected');
+        
+        selectedOdd = odd;
+        selectedMatch = teams;
+        document.getElementById('slipMatch').innerText = teams;
+        document.getElementById('slipOdd').innerText = odd;
+        document.getElementById('betslip').style.display = 'flex';
+        updateWin();
+    }
+
+    function updateWin() {
+        const stake = document.getElementById('stake').value || 0;
+        document.getElementById('posWin').innerText = (stake * selectedOdd).toFixed(2);
+    }
+
+    function placeBet() {
+        const stake = parseFloat(document.getElementById('stake').value);
+        if (stake > currentBalance) return alert("Insufficient Funds! Please Deposit.");
+        if (stake < 10) return alert("Minimum bet is KES 10");
+
+        currentBalance -= stake;
+        localStorage.setItem('pesa_balance', currentBalance);
+        document.getElementById('displayBal').innerText = currentBalance.toFixed(2);
+        
+        alert("✔️ Bet Placed Successfully! Good luck.");
+        document.getElementById('betslip').style.display = 'none';
+        document.querySelectorAll('.odd-btn').forEach(btn => btn.classList.remove('selected'));
+    }
+
+    loadMatches();
+</script>
+
 </body>
 </html>
