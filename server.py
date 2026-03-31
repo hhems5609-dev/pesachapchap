@@ -6,22 +6,16 @@ PORT = int(os.environ.get("PORT", 10000))
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        # Route logic
+        # If they ask for /, give them index.html
         if self.path == '/':
-            self.path = 'templates/index.html'
+            self.path = 'index.html'
+        # If they ask for /play, give them play.html
         elif self.path == '/play':
-            self.path = 'templates/play.html'
-        
-        # If the file isn't in root, check templates
-        if not os.path.exists(self.path.lstrip('/')):
-            temp_path = os.path.join('templates', self.path.lstrip('/'))
-            if os.path.exists(temp_path):
-                self.path = temp_path
-
+            self.path = 'play.html'
         return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
 if __name__ == "__main__":
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("0.0.0.0", PORT), MyHandler) as httpd:
-        print(f"🚀 SERVER LIVE ON PORT {PORT}")
+        print(f"🚀 Pesa ChapChap Brute Force Mode on {PORT}")
         httpd.serve_forever()
