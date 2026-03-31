@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesa ChapChap | Admin Panel</title>
+    <style>
+        body { background: #0d011a; color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .card { background: #1a1a35; padding: 15px; border-radius: 10px; border: 1px solid #2a2a50; }
+        h2 { color: #00e676; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border-bottom: 1px solid #2a2a50; text-align: left; }
+        button { background: #ff1744; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .refresh-btn { background: #2979ff; width: 100%; padding: 10px; margin-bottom: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Admin Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="card">
+            <h3>Total Users</h3>
+            <div id="totalUsers">0</div>
+        </div>
+        <div class="card">
+            <h3>Total Balance</h3>
+            <div id="totalVault">0 KES</div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="loadAdminData()">🔄 REFRESH DATA</button>
+
+    <div class="card">
+        <h2>Active Players</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Phone</th>
+                    <th>Balance</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        function loadAdminData() {
+            const users = JSON.parse(localStorage.getItem('pesa_users') || '[]');
+            const table = document.getElementById('userTable');
+            const totalUsers = document.getElementById('totalUsers');
+            const totalVault = document.getElementById('totalVault');
+            
+            table.innerHTML = '';
+            let vaultSum = 0;
+
+            users.forEach((user, index) => {
+                vaultSum += parseFloat(user.balance || 0);
+                table.innerHTML += `
+                    <tr>
+                        <td>${user.phone}</td>
+                        <td>${user.balance} KES</td>
+                        <td><button onclick="resetUser(${index})">Reset</button></td>
+                    </tr>
+                `;
+            });
+
+            totalUsers.innerText = users.length;
+            totalVault.innerText = vaultSum.toFixed(2) + " KES";
+        }
+
+        function resetUser(index) {
+            let users = JSON.parse(localStorage.getItem('pesa_users') || '[]');
+            users[index].balance = 0;
+            localStorage.setItem('pesa_users', JSON.stringify(users));
+            loadAdminData();
+            alert('User balance reset to 0');
+        }
+
+        loadAdminData();
+    </script>
+</body>
+</html>
