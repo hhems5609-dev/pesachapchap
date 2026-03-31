@@ -3,174 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Live Sports</title>
+    <title>Pesa ChapChap | Home</title>
     <style>
         :root {
-            --bg-deep: #141526;
-            --bg-card: #1f203a;
+            --bg-deep: #0d121c;
+            --bg-card: #1a1e29;
             --neon-green: #00e676;
             --neon-purple: #9c27b0;
             --live-red: #ff3d00;
             --text-main: #ffffff;
             --text-muted: #8e8fa3;
-            --border: #2d2e4d;
+            --border: #242a36;
         }
 
-        body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 100px; }
+        body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 90px; }
 
-        /* Header & Balance */
-        header { background: #1a1b31; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: 900; font-size: 1.1rem; }
-        .logo span { color: var(--neon-green); }
-        .bal-container { background: #111221; border: 1px solid var(--neon-green); padding: 5px 12px; border-radius: 6px; font-weight: bold; color: var(--neon-green); }
+        /* HEADER */
+        header { background: #0b0f16; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 900; font-size: 1.1rem; color: var(--neon-green); }
+        .bal-box { background: #ffee00; color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; }
 
-        /* LIVE Flashing Animation */
-        .live-tag {
-            color: var(--live-red);
-            font-weight: 800;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            animation: blink 1.5s infinite;
-        }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .live-dot { width: 6px; height: 6px; background: var(--live-red); border-radius: 50%; }
+        /* TOP SCROLLING MENU */
+        .top-menu { background: #0b0f16; display: flex; overflow-x: auto; padding: 10px; gap: 15px; border-bottom: 1px solid var(--border); }
+        .top-menu::-webkit-scrollbar { display: none; }
+        .menu-item { display: flex; flex-direction: column; align-items: center; min-width: 60px; text-decoration: none; color: var(--text-muted); font-size: 0.7rem; font-weight: bold; }
+        .menu-item.active { color: var(--neon-green); }
+        .menu-icon { font-size: 1.4rem; margin-bottom: 4px; }
 
-        /* Match Cards */
-        .match-card { background: var(--bg-card); margin: 12px 15px; padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
-        .match-meta { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .league { font-size: 0.65rem; color: var(--neon-purple); font-weight: bold; text-transform: uppercase; }
-        .teams { font-weight: bold; font-size: 1rem; margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
-        
-        .odds-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        .odd-btn { 
-            background: #2d2e4d; border: 1px solid #3d3e63; color: #fff; 
-            padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;
-            font-weight: bold; transition: 0.2s;
-        }
-        .odd-btn:active, .odd-btn.selected { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
+        /* BANNER */
+        .hero-banner { background: linear-gradient(135deg, #00c853, #6200ea); margin: 15px; padding: 25px; border-radius: 12px; text-align: center; font-weight: 900; font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        /* Betslip */
-        #betslip { 
-            position: fixed; bottom: 80px; left: 5%; width: 90%; 
-            background: #1f203a; border: 2px solid var(--neon-green); color: #fff; 
-            padding: 15px; border-radius: 12px; display: none; flex-direction: column;
-            box-shadow: 0 0 20px rgba(0, 230, 118, 0.3); z-index: 1000;
-        }
-        .place-btn { background: var(--neon-green); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 800; width: 100%; margin-top: 10px; cursor: pointer; }
+        /* POPULAR GAMES GRID */
+        .section-title { padding: 0 15px; font-size: 0.9rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .game-card { background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border); text-decoration: none; color: white; text-align: center; overflow: hidden; position: relative; }
+        .game-img { font-size: 2.5rem; padding: 25px 0; background: rgba(255,255,255,0.03); }
+        .game-info { padding: 10px; font-weight: bold; font-size: 0.85rem; background: #242a36; }
 
-        /* Navigation */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #1a1b31; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
-        .nav-item { color: var(--text-muted); text-decoration: none; font-size: 0.7rem; text-align: center; }
-        .nav-item.active { color: var(--neon-green); }
+        /* LIVE MATCH PREVIEW (Inline Sports) */
+        .live-preview { background: var(--bg-card); margin: 15px; padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .live-tag { color: var(--live-red); font-size: 0.7rem; font-weight: 800; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* BOTTOM NAV */
+        .bottom-nav { background: #0b0f16; border-top: 1px solid var(--border); position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); text-decoration: none; font-size: 0.7rem; font-weight: bold; }
+        .nav-link.active { color: var(--neon-green); }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">PESA<span>CHAPCHAP</span></div>
-    <div class="bal-container">KES <span id="displayBal">0.00</span></div>
+    <div class="logo">PESA CHAPCHAP</div>
+    <div class="bal-box">KES <span id="userBal">0.00</span></div>
 </header>
 
-<div id="matchList"></div>
-
-<div id="betslip">
-    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-        <span id="slipMatch" style="font-size:0.9rem; font-weight:bold;">Match</span>
-        <span id="slipOdd" style="color:var(--neon-green); font-weight:bold;">x0.00</span>
-    </div>
-    <input type="number" id="stake" style="background:#141526; border:1px solid var(--border); color:#fff; padding:12px; border-radius:8px; margin-bottom:10px; outline:none;" placeholder="Stake Amount" oninput="updateWin()">
-    <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:10px;">
-        <span>Potential Payout:</span>
-        <span id="posWin" style="color:var(--neon-green); font-weight:bold;">KES 0.00</span>
-    </div>
-    <button class="place-btn" onclick="placeBet()">PLACE BET</button>
+<div class="top-menu">
+    <a href="/" class="menu-item active"><span class="menu-icon">⚽</span>Soccer</a>
+    <a href="/play" class="menu-item"><span class="menu-icon">🚀</span>Aviator</a>
+    <a href="#" class="menu-item"><span class="menu-icon">🏆</span>Jackpot</a>
+    <a href="#" class="menu-item"><span class="menu-icon">🎲</span>Casino</a>
+    <a href="#" class="menu-item"><span class="menu-icon">🏇</span>Virtuals</a>
 </div>
 
-<div class="nav">
-    <a href="/" class="nav-item active">🏠<br>Home</a>
-    <a href="/play" class="nav-item">🚀<br>Aviator</a>
-    <a href="/deposit" class="nav-item">🟢<br>Deposit</a>
-    <a href="/admin" class="nav-item">👤<br>Account</a>
+<div class="hero-banner">50% WELCOME BONUS ON FIRST DEPOSIT!</div>
+
+<div class="section-title">Popular Games</div>
+<div class="game-grid">
+    <a href="/play" class="game-card">
+        <div class="game-img">🚀</div>
+        <div class="game-info">Aviator / Crash</div>
+    </a>
+    <a href="/sports" class="game-card">
+        <div class="game-img">⚽</div>
+        <div class="game-info">Sports Betting</div>
+    </a>
+    <a href="#" class="game-card" onclick="alert('Casino coming soon!')">
+        <div class="game-img" style="filter: grayscale(1);">🎰</div>
+        <div class="game-info">Casino Slots</div>
+    </a>
+    <a href="#" class="game-card" onclick="alert('Virtuals coming soon!')">
+        <div class="game-img" style="filter: grayscale(1);">🏇</div>
+        <div class="game-info">Virtual Racing</div>
+    </a>
+</div>
+
+<div class="section-title">Live Highlight</div>
+<div class="live-preview">
+    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+        <span class="live-tag">● LIVE 84'</span>
+        <span style="font-size:0.7rem; color:var(--text-muted);">Premier League</span>
+    </div>
+    <div style="font-weight:bold;">Arsenal 2 - 1 Man Utd</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+        <div style="background:#242a36; padding:8px; border-radius:5px; text-align:center; font-size:0.8rem;">1.15</div>
+        <div style="background:#242a36; padding:8px; border-radius:5px; text-align:center; font-size:0.8rem;">4.20</div>
+        <div style="background:#242a36; padding:8px; border-radius:5px; text-align:center; font-size:0.8rem;">18.5</div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="/" class="nav-link active">🏠<br>Home</a>
+    <a href="/play" class="nav-link">🚀<br>Crash</a>
+    <a href="/deposit" class="nav-link">💳<br>Deposit</a>
+    <a href="/admin" class="nav-link">👤<br>Account</a>
 </div>
 
 <script>
     let rawBal = localStorage.getItem('pesa_balance');
     let currentBalance = (rawBal === null || rawBal === "NaN") ? 0.00 : parseFloat(rawBal);
-    document.getElementById('displayBal').innerText = currentBalance.toFixed(2);
-
-    const matches = [
-        { teams: "Manchester Utd vs Arsenal", league: "Premier League", time: "72'", isLive: true, odds: [2.15, 3.10, 1.95] },
-        { teams: "Real Madrid vs Barcelona", league: "La Liga", time: "18'", isLive: true, odds: [1.85, 3.40, 2.60] },
-        { teams: "Gor Mahia vs AFC Leopards", league: "FKF Premier League", time: "Today 15:00", isLive: false, odds: [1.70, 2.80, 4.50] },
-        { teams: "Liverpool vs Chelsea", league: "Premier League", time: "Today 22:30", isLive: false, odds: [1.90, 3.60, 3.20] },
-        { teams: "Bayern vs Dortmund", league: "Bundesliga", time: "Tomorrow 19:30", isLive: false, odds: [1.45, 4.50, 6.20] }
-    ];
-
-    let selectedOdd = 0;
-    let selectedMatchTeams = "";
-
-    function loadMatches() {
-        const container = document.getElementById('matchList');
-        container.innerHTML = ""; 
-        matches.forEach(m => {
-            const statusHtml = m.isLive 
-                ? `<div class="live-tag"><div class="live-dot"></div> LIVE ${m.time}</div>` 
-                : `<div style="font-size:0.7rem; color:var(--text-muted);">${m.time}</div>`;
-
-            container.innerHTML += `
-                <div class="match-card">
-                    <div class="match-meta">
-                        <div class="league">${m.league}</div>
-                        ${statusHtml}
-                    </div>
-                    <div class="teams">
-                        <span>${m.teams.split(' vs ')[0]}</span>
-                        <span>${m.teams.split(' vs ')[1]}</span>
-                    </div>
-                    <div class="odds-row">
-                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[0]}, this)">${m.odds[0]}</div>
-                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[1]}, this)">${m.odds[1]}</div>
-                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[2]}, this)">${m.odds[2]}</div>
-                    </div>
-                </div>`;
-        });
-    }
-
-    function openSlip(teams, odd, element) {
-        document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
-        element.classList.add('selected');
-        
-        selectedOdd = odd;
-        selectedMatchTeams = teams;
-        document.getElementById('slipMatch').innerText = teams;
-        document.getElementById('slipOdd').innerText = 'x' + odd.toFixed(2);
-        document.getElementById('betslip').style.display = 'flex';
-        updateWin();
-    }
-
-    function updateWin() {
-        const stake = document.getElementById('stake').value || 0;
-        document.getElementById('posWin').innerText = 'KES ' + (stake * selectedOdd).toFixed(2);
-    }
-
-    function placeBet() {
-        const stake = parseFloat(document.getElementById('stake').value);
-        if (!stake || stake < 10) return alert("Minimum stake is KES 10");
-        if (stake > currentBalance) return alert("Insufficient Balance! Please Deposit.");
-
-        currentBalance -= stake;
-        localStorage.setItem('pesa_balance', currentBalance.toFixed(2));
-        document.getElementById('displayBal').innerText = currentBalance.toFixed(2);
-        
-        alert("✔️ Bet Placed on " + selectedMatchTeams);
-        document.getElementById('betslip').style.display = 'none';
-        document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
-        document.getElementById('stake').value = "";
-    }
-
-    loadMatches();
+    document.getElementById('userBal').innerText = currentBalance.toFixed(2);
 </script>
 </body>
 </html>
