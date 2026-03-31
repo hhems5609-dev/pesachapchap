@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Pro Dashboard</title>
+    <title>Pesa ChapChap | Sports Hub</title>
     <style>
         :root {
             --bg-deep: #0d121c;
@@ -13,9 +13,9 @@
             --text-muted: #8e8fa3;
             --border: #1f2533;
             --dash-bg: #1c222e;
+            --odd-bg: #222834;
         }
 
-        /* Light Theme Variables */
         .light-theme {
             --bg-deep: #f4f4f7;
             --bg-card: #ffffff;
@@ -23,53 +23,56 @@
             --text-muted: #666;
             --border: #e0e0e0;
             --dash-bg: #ffffff;
+            --odd-bg: #e0e0e0;
         }
 
-        body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; transition: 0.3s; }
+        body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 30px; transition: 0.3s; }
 
-        /* DASHBOARD STYLES */
+        /* HEADER & NAVIGATION */
+        header { 
+            background: var(--bg-card); padding: 10px 15px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; 
+        }
+        .menu-trigger { font-size: 1.5rem; cursor: pointer; }
+        .bal-box { background: #ffee00; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
+
+        /* DASHBOARD SIDEBAR */
         #dashboard {
             position: fixed; top: 0; left: -100%; width: 85%; height: 100%;
             background: var(--dash-bg); z-index: 2000; transition: 0.3s;
-            display: flex; flex-direction: column;
+            display: flex; flex-direction: column; box-shadow: 10px 0 20px rgba(0,0,0,0.5);
         }
         #dashboard.active { left: 0; }
-        
         .dash-scroll { flex: 1; overflow-y: auto; }
-        
-        .dash-item {
-            display: flex; align-items: center; padding: 15px 20px;
-            text-decoration: none; color: var(--text-main); font-weight: 600;
-            border-bottom: 1px solid var(--border);
+        .dash-item { display: flex; align-items: center; padding: 18px 20px; text-decoration: none; color: var(--text-main); font-weight: 600; border-bottom: 1px solid var(--border); }
+        .pref-section { padding: 20px; background: rgba(0,0,0,0.05); border-top: 1px solid var(--border); }
+
+        /* MATCH LAYOUT (Matches Betika) */
+        .odds-header { display: flex; padding: 10px 15px; font-size: 0.7rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid var(--border); }
+        .match-row { display: flex; padding: 15px; border-bottom: 1px solid var(--border); align-items: center; }
+        .match-teams { flex: 2; display: flex; flex-direction: column; gap: 4px; }
+        .team-name { font-weight: bold; font-size: 0.95rem; }
+        .match-meta { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
+        .odds-container { flex: 3; display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-odd { 
+            background: var(--odd-bg); border: 1px solid var(--border); color: var(--text-main); 
+            border-radius: 10px; width: 65px; height: 44px; display: flex; 
+            align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; 
         }
 
-        /* PREFERENCES SECTION */
-        .pref-section {
-            padding: 20px; background: rgba(0,0,0,0.05);
-            border-top: 1px solid var(--border);
-        }
-        .pref-title { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; font-weight: bold; }
-        
-        .pref-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .pref-label { font-size: 0.9rem; font-weight: bold; }
-        .pref-sub { font-size: 0.7rem; color: var(--text-muted); display: block; }
+        /* BANNER */
+        .banner { background: linear-gradient(90deg, #00e676, #b2ff59); margin: 12px; padding: 20px; border-radius: 12px; color: #000; text-align: center; font-weight: 900; }
 
-        /* TOGGLE SWITCH */
+        /* UTILS */
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1500; }
+        .lang-select { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); padding: 5px; border-radius: 5px; }
         .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc; transition: .4s; border-radius: 20px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 14px; width: 14px;
-            left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--neon-green); }
         input:checked + .slider:before { transform: translateX(20px); }
-
-        header { background: var(--bg-card); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1500; }
     </style>
 </head>
 <body id="mainBody">
@@ -77,36 +80,25 @@
 <div id="overlay" onclick="toggleDash()"></div>
 
 <div id="dashboard">
-    <div style="padding: 20px; font-weight: 900; border-bottom: 1px solid var(--border);">PESACHAPCHAP</div>
-    
+    <div style="padding: 20px; font-weight: 900; border-bottom: 1px solid var(--border);">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
     <div class="dash-scroll">
-        <a href="#" class="dash-item">🏟️ Prematch</a>
-        <a href="#" class="dash-item">📡 Live Games</a>
-        <a href="/play" class="dash-item">🚀 Aviator</a>
-        <a href="#" class="dash-item">🎰 Casino</a>
+        <a href="#" class="dash-item" data-key="nav_prematch">🏟️ Prematch</a>
+        <a href="#" class="dash-item" data-key="nav_live">📡 Live Games</a>
+        <a href="/play" class="dash-item" data-key="nav_aviator">🚀 Aviator</a>
     </div>
-
     <div class="pref-section">
-        <div class="pref-title">Preferences</div>
-        
-        <div class="pref-row">
-            <div>
-                <span class="pref-label">Display</span>
-                <span class="pref-sub">Switch between light and dark theme</span>
-            </div>
+        <div class="pref-title" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:10px;" data-key="pref_title">PREFERENCES</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <span style="font-size:0.9rem;" data-key="pref_lang">Language</span>
+            <select class="lang-select" id="langToggle" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="sw">Kiswahili</option>
+            </select>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.9rem;" data-key="pref_display">Dark Mode</span>
             <label class="switch">
                 <input type="checkbox" id="themeToggle" onclick="toggleTheme()">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="pref-row">
-            <div>
-                <span class="pref-label">Data Saver</span>
-                <span class="pref-sub">Turn on to save data bundles</span>
-            </div>
-            <label class="switch">
-                <input type="checkbox" checked>
                 <span class="slider"></span>
             </label>
         </div>
@@ -114,17 +106,148 @@
 </div>
 
 <header>
-    <div onclick="toggleDash()" style="font-size:1.5rem;">☰</div>
-    <div style="font-weight:900; color:var(--neon-green);">PESA CHAPCHAP</div>
-    <div style="background:#ffee00; color:#000; padding:4px 10px; border-radius:20px; font-weight:800; font-size:0.8rem;">KES 0.00</div>
+
+
+
+<header>
+    <div class="menu-trigger" onclick="toggleDash()">☰</div>
+    <div style="font-weight:900; font-style:italic;">
+        PESA<span style="color:var(--neon-green)">CHAPCHAP</span>
+    </div>
+    <div class="bal-box">KES <span id="userBal">0.00</span></div>
 </header>
 
-<div style="padding: 20px; text-align:center;">
-    <h3>Welcome to the Pro Dashboard</h3>
-    <p>Open the menu to try the Light/Dark mode switch!</p>
+cat <<EOF > index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesa ChapChap | Pro Sports</title>
+    <style>
+        :root {
+            --bg-deep: #0d121c;
+            --bg-card: #141a26;
+            --neon-green: #00e676;
+            --text-main: #ffffff;
+            --text-muted: #8e8fa3;
+            --border: #1f2533;
+            --dash-bg: #1c222e;
+            --odd-bg: #222834;
+        }
+
+        .light-theme {
+            --bg-deep: #f4f4f7;
+            --bg-card: #ffffff;
+            --text-main: #1a1e29;
+            --text-muted: #666;
+            --border: #e0e0e0;
+            --dash-bg: #ffffff;
+            --odd-bg: #e0e0e0;
+        }
+
+        body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 30px; transition: 0.3s; }
+
+        /* HEADER */
+        header { 
+            background: var(--bg-card); padding: 10px 15px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; 
+        }
+        .menu-trigger { font-size: 1.5rem; cursor: pointer; }
+        .bal-box { background: #ffee00; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
+
+        /* DASHBOARD SIDEBAR */
+        #dashboard {
+            position: fixed; top: 0; left: -100%; width: 85%; height: 100%;
+            background: var(--dash-bg); z-index: 2000; transition: 0.3s;
+            display: flex; flex-direction: column; box-shadow: 10px 0 20px rgba(0,0,0,0.5);
+        }
+        #dashboard.active { left: 0; }
+        .dash-scroll { flex: 1; overflow-y: auto; }
+        .dash-item { display: flex; align-items: center; padding: 18px 20px; text-decoration: none; color: var(--text-main); font-weight: 600; border-bottom: 1px solid var(--border); }
+        .pref-section { padding: 20px; background: rgba(0,0,0,0.05); border-top: 1px solid var(--border); }
+
+        /* MATCH LAYOUT */
+        .odds-header { display: flex; padding: 10px 15px; font-size: 0.7rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid var(--border); }
+        .match-row { display: flex; padding: 15px; border-bottom: 1px solid var(--border); align-items: center; }
+        .match-teams { flex: 2; display: flex; flex-direction: column; gap: 4px; }
+        .team-name { font-weight: bold; font-size: 0.95rem; }
+        .match-meta { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
+        .odds-container { flex: 3; display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-odd { 
+            background: var(--odd-bg); border: 1px solid var(--border); color: var(--text-main); 
+            border-radius: 10px; width: 65px; height: 44px; display: flex; 
+            align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; 
+        }
+
+        /* BANNER */
+        .banner { background: linear-gradient(90deg, #00e676, #b2ff59); margin: 12px; padding: 20px; border-radius: 12px; color: #000; text-align: center; font-weight: 900; }
+
+        /* UTILS */
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1500; }
+        .lang-select { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); padding: 5px; border-radius: 5px; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--neon-green); }
+        input:checked + .slider:before { transform: translateX(20px); }
+    </style>
+</head>
+<body id="mainBody">
+
+<div id="overlay" onclick="toggleDash()"></div>
+
+<div id="dashboard">
+    <div style="padding: 20px; font-weight: 900; border-bottom: 1px solid var(--border);">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
+    <div class="dash-scroll">
+        <a href="#" class="dash-item" data-key="nav_prematch">🏟️ Prematch</a>
+        <a href="#" class="dash-item" data-key="nav_live">📡 Live Games</a>
+        <a href="/play" class="dash-item" data-key="nav_aviator">🚀 Aviator</a>
+    </div>
+    <div class="pref-section">
+        <div class="pref-title" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:10px;" data-key="pref_title">PREFERENCES</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <span style="font-size:0.9rem;" data-key="pref_lang">Language</span>
+            <select class="lang-select" id="langToggle" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="sw">Kiswahili</option>
+            </select>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.9rem;" data-key="pref_display">Dark Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="themeToggle" onclick="toggleTheme()">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
 </div>
 
+<header>
+    <div class="menu-trigger" onclick="toggleDash()">☰</div>
+    <div style="font-weight:900; font-style:italic;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
+    <div class="bal-box">KES <span id="userBal">0.00</span></div>
+</header>
+
+<div class="banner">
+    <span data-key="jackpot_txt">🏆 OMOKA NA MIDWEEK 15M JACKPOT!</span>
+</div>
+
+<div class="odds-header">
+    <div style="flex:2" data-key="upcoming">Upcoming Matches</div>
+    <div style="flex:3; display:flex; justify-content:flex-end; gap:50px; padding-right:20px;"><span>1</span><span>X</span><span>2</span></div>
+</div>
+
+<div id="matchContainer"></div>
+
 <script>
+    const translations = {
+        en: { nav_prematch: "🏟️ Prematch", nav_live: "📡 Live Games", nav_aviator: "🚀 Aviator", pref_title: "PREFERENCES", pref_lang: "Language", pref_display: "Dark Mode", jackpot_txt: "🏆 OMOKA NA MIDWEEK 15M JACKPOT!", upcoming: "Upcoming Matches" },
+        sw: { nav_prematch: "🏟️ Mechi Zijazo", nav_live: "📡 Mubashara", nav_aviator: "🚀 Aviator", pref_title: "MAPENDELEO", pref_lang: "Lugha", pref_display: "Hali ya Giza", jackpot_txt: "🏆 SHINDA MILIONI 15 JACKPOT!", upcoming: "Mechi Zinazokuja" }
+    };
+
     function toggleDash() {
         const dash = document.getElementById('dashboard');
         const overlay = document.getElementById('overlay');
@@ -135,15 +258,63 @@
     function toggleTheme() {
         const body = document.getElementById('mainBody');
         body.classList.toggle('light-theme');
-        const isLight = body.classList.contains('light-theme');
-        localStorage.setItem('pesa_theme', isLight ? 'light' : 'dark');
+        localStorage.setItem('pesa_theme', body.classList.contains('light-theme') ? 'light' : 'dark');
     }
 
-    // Load saved theme
+    function changeLanguage() {
+        const lang = document.getElementById('langToggle').value;
+        localStorage.setItem('pesa_lang', lang);
+        applyLanguage(lang);
+    }
+
+    function applyLanguage(lang) {
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const key = el.getAttribute('data-key');
+            if (translations[lang][key]) el.innerText = translations[lang][key];
+        });
+    }
+
+    // AUTOMATIC MATCH GENERATOR
+    function generateMatches(count) {
+        const container = document.getElementById('matchContainer');
+        const teams = ["Arsenal", "Man City", "Chelsea", "Liverpool", "Real Madrid", "Barcelona", "PSG", "Bayern", "Gor Mahia", "AFC Leopards"];
+        
+        for (let i = 0; i < count; i++) {
+            let t1 = teams[Math.floor(Math.random() * teams.length)];
+            let t2 = teams[Math.floor(Math.random() * teams.length)];
+            while(t1 === t2) t2 = teams[Math.floor(Math.random() * teams.length)];
+
+            container.innerHTML += `
+                <div class="match-row">
+                    <div class="match-teams">
+                        <div class="match-meta">⚽ Soccer • Today, ${14 + i}:00</div>
+                        <span class="team-name">${t1}</span>
+                        <span class="team-name">${t2}</span>
+                    </div>
+                    <div class="odds-container">
+                        <div class="btn-odd">${(Math.random() * 2 + 1.1).toFixed(2)}</div>
+                        <div class="btn-odd">${(Math.random() * 1.5 + 2.5).toFixed(2)}</div>
+                        <div class="btn-odd">${(Math.random() * 3 + 1.8).toFixed(2)}</div>
+                    </div>
+                </div>`;
+        }
+    }
+
+    // Init
+    const savedLang = localStorage.getItem('pesa_lang') || 'en';
+    document.getElementById('langToggle').value = savedLang;
+    applyLanguage(savedLang);
+
     if (localStorage.getItem('pesa_theme') === 'light') {
         document.getElementById('mainBody').classList.add('light-theme');
         document.getElementById('themeToggle').checked = true;
     }
+
+    let rawBal = localStorage.getItem('pesa_balance');
+    document.getElementById('userBal').innerText = (rawBal === null || rawBal === "NaN") ? "0.00" : parseFloat(rawBal).toFixed(2);
+    
+    // Auto-load 12 matches
+    generateMatches(12);
 </script>
 </body>
 </html>
