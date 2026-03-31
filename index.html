@@ -3,194 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Fully Functional</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <title>Pesa ChapChap | Professional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #0d121c;
+            --bg-body: #0d121c;
             --bg-card: #141a26;
             --neon-green: #00e676;
-            --text-main: #ffffff;
-            --text-muted: #8e8fa3;
             --border: #1f2533;
-            --accent: #ffee00;
+            --text-muted: #8e8fa3;
         }
 
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', sans-serif; background: var(--bg-deep); color: var(--text-main); overflow-x: hidden; }
+        body { background: var(--bg-body); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 70px; }
 
-        /* --- STYLISH SPLASH PAGE --- */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a2233 0%, #0d121c 100%);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        header { 
+            background: #141a26; padding: 12px 15px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; 
         }
-        .splash-logo { font-size: 2.5rem; font-weight: 900; font-style: italic; animation: pulse 2s infinite; }
-        .splash-logo span { color: var(--neon-green); }
-        .loader-bar { width: 200px; height: 4px; background: rgba(255,255,255,0.1); margin-top: 20px; border-radius: 10px; overflow: hidden; }
-        .loader-progress { width: 0%; height: 100%; background: var(--neon-green); animation: load 2.5s forwards; }
+        .bal-box { background: #ffee00; color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
 
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; text-shadow: 0 0 15px var(--neon-green); } 100% { opacity: 0.8; } }
-        @keyframes load { to { width: 100%; } }
+        .sports-nav { display: flex; overflow-x: auto; padding: 10px; gap: 20px; background: #141a26; border-bottom: 1px solid var(--border); }
+        .sport-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; min-width: 55px; color: var(--text-muted); }
+        .sport-item.active { color: var(--neon-green); font-weight: bold; }
 
-        /* --- FUNCTIONAL APP LAYOUT --- */
-        #main-app { display: none; }
-        header { background: var(--bg-card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        .logo-small { font-weight: 900; font-style: italic; }
-        .bal-box { background: var(--accent); color: #000; padding: 6px 15px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(255, 238, 0, 0.3); }
+        .banner { 
+            background: linear-gradient(90deg, #00e676, #b2ff59); 
+            margin: 12px; padding: 15px; border-radius: 10px; 
+            color: #000; text-align: center; font-weight: 900; font-size: 0.85rem;
+        }
 
-        /* MATCH CARDS */
-        .match-container { padding: 15px; }
-        .match-card { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); padding: 15px; margin-bottom: 15px; }
-        .match-time { font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .match-teams { font-weight: 600; font-size: 1rem; margin-bottom: 15px; }
+        .odds-header { display: flex; padding: 10px 15px; font-size: 0.7rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid var(--border); }
+        .match-row { padding: 12px 15px; border-bottom: 1px solid var(--border); }
+        .match-meta { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .match-main { display: flex; align-items: center; }
+        .match-teams { flex: 2; display: flex; flex-direction: column; gap: 2px; }
+        .team-name { font-weight: 600; font-size: 0.9rem; }
         
-        .odds-row { display: flex; gap: 10px; }
-        .odd-btn { 
-            flex: 1; background: #222834; border: 1px solid var(--border); color: #fff; 
-            padding: 12px; border-radius: 8px; font-weight: 800; font-size: 0.9rem;
-            transition: all 0.2s; cursor: pointer; text-align: center;
-        }
-        .odd-btn:active { transform: scale(0.95); }
-        .odd-btn.selected { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
-
-        /* FLOATING BETSLIP */
-        #betslip-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--neon-green);
-            color: #000; padding: 15px; font-weight: 800; display: none;
-            justify-content: space-between; align-items: center; z-index: 2000;
-            border-top-left-radius: 15px; border-top-right-radius: 15px;
+        .odds-container { flex: 3; display: flex; gap: 8px; justify-content: flex-end; }
+        .btn-odd { 
+            background: #222834; border: 1px solid var(--border); color: #fff; 
+            border-radius: 6px; width: 60px; height: 40px; display: flex; 
+            align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; 
         }
 
-        /* POPUP MODAL */
-        #bet-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); z-index: 3000; display: none;
-            justify-content: center; align-items: center;
+        .market-link { color: var(--neon-green); font-size: 0.7rem; font-weight: 600; margin-top: 8px; display: block; text-align: right; text-decoration: none; }
+
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; background: #141a26; 
+            display: flex; justify-content: space-around; padding: 12px 0; 
+            border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--text-muted);
         }
-        .modal-content { background: var(--bg-card); padding: 25px; border-radius: 20px; width: 85%; text-align: center; border: 1px solid var(--border); }
-        .place-btn { background: var(--neon-green); border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div id="splash-screen">
-    <div class="splash-logo">PESA<span>CHAPCHAP</span></div>
-    <div class="loader-bar"><div class="loader-progress"></div></div>
+<header>
+    <div style="font-size:1.3rem;">☰</div>
+    <div style="font-weight:900; font-style:italic;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
+    <div class="bal-box">KES 0.00</div>
+</header>
+
+<div class="sports-nav">
+    <div class="sport-item active">⚽<br>Soccer</div>
+    <div class="sport-item">🚀<br>Aviator</div>
+    <div class="sport-item">🏆<br>Jackpots</div>
+    <div class="sport-item">🎰<br>Casino</div>
 </div>
 
-<div id="main-app">
-    <header>
-        <div class="logo-small">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
-        <div class="bal-box">KES <span id="balance">1000.00</span></div>
-    </header>
+<div class="banner">🏆 OMOKA NA MIDWEEK 15M JACKPOT!</div>
 
-    <div class="match-container" id="matchList"></div>
-
-    <div id="betslip-bar" onclick="openBetModal()">
-        <span>BETSLIP (<span id="betCount">0</span>)</span>
-        <span id="totalOdds">Odds: 1.00</span>
-        <span>PLACE BET ➔</span>
-    </div>
+<div class="odds-header">
+    <div style="flex:2">Match</div>
+    <div style="flex:3; display:flex; justify-content:flex-end; gap:50px; padding-right:15px;"><span>1</span><span>X</span><span>2</span></div>
 </div>
 
-<div id="bet-modal">
-    <div class="modal-content">
-        <h3 style="margin-top:0">Confirm Your Bet</h3>
-        <p style="color:var(--text-muted)">Stake Amount: <b>KES 100</b></p>
-        <p>Possible Win: <span id="winAmount" style="color:var(--neon-green); font-weight:900;">KES 0.00</span></p>
-        <button class="place-btn" onclick="confirmBet()">CONFIRM & PLACE</button>
-        <button style="background:none; color:var(--text-muted); border:none; margin-top:10px;" onclick="closeModal()">Cancel</button>
-    </div>
-</div>
+<div id="matchContainer"></div>
+
+<nav class="bottom-nav">
+    <div style="color:var(--neon-green)">🏠<br>Home</div>
+    <div>📡<br>Live</div>
+    <div>🧾<br>My Bets</div>
+    <div>👤<br>Account</div>
+</nav>
 
 <script>
-    let currentBalance = 1000.00;
-    let selectedOdds = [];
-
-    // --- SPLASH TRANSITION ---
-    window.onload = () => {
-        setTimeout(() => {
-            document.getElementById('splash-screen').style.transform = 'translateY(-100%)';
-            document.getElementById('main-app').style.display = 'block';
-            renderMatches();
-        }, 2600);
-    };
-
-    // --- FUNCTIONAL MATCH GENERATOR ---
     function renderMatches() {
+        const container = document.getElementById('matchContainer');
         const games = [
-            { id: 1, t1: 'Arsenal', t2: 'Chelsea', o1: 1.85, oX: 3.40, o2: 4.10 },
-            { id: 2, t1: 'Man City', t2: 'Liverpool', o1: 2.10, oX: 3.10, o2: 3.20 },
-            { id: 3, t1: 'Real Madrid', t2: 'Barcelona', o1: 2.40, oX: 3.50, o2: 2.60 },
-            { id: 4, t1: 'Gor Mahia', t2: 'AFC Leopards', o1: 1.90, oX: 3.00, o2: 4.50 }
+            { t1: 'Brazil', t2: 'Croatia', o1: '1.78', oX: '3.90', o2: '4.10', time: 'Today, 21:00', m: '78' },
+            { t1: 'Mexico', t2: 'Belgium', o1: '3.60', oX: '3.50', o2: '2.02', time: 'Today, 22:30', m: '84' },
+            { t1: 'USA', t2: 'Portugal', o1: '4.70', oX: '4.20', o2: '1.63', time: 'Tomorrow, 19:00', m: '102' }
         ];
 
-        const container = document.getElementById('matchList');
-        container.innerHTML = '<h3>Upcoming Highlights</h3>';
-        
-        games.forEach(game => {
+        games.forEach(g => {
             container.innerHTML += `
-                <div class="match-card">
-                    <div class="match-time"><span>⚽ Soccer</span> <span>Today, 21:00</span></div>
-                    <div class="match-teams">${game.t1} vs ${game.t2}</div>
-                    <div class="odds-row">
-                        <div class="odd-btn" onclick="selectOdd(this, ${game.o1}, '${game.t1}')">1<br>${game.o1}</div>
-                        <div class="odd-btn" onclick="selectOdd(this, ${game.oX}, 'Draw')">X<br>${game.oX}</div>
-                        <div class="odd-btn" onclick="selectOdd(this, ${game.o2}, '${game.t2}')">2<br>${game.o2}</div>
+                <div class="match-row">
+                    <div class="match-meta"><span>⚽ Soccer • International</span> <span>${g.time}</span></div>
+                    <div class="match-main">
+                        <div class="match-teams"><span class="team-name">${g.t1}</span><span class="team-name">${g.t2}</span></div>
+                        <div class="odds-container">
+                            <div class="btn-odd">${g.o1}</div>
+                            <div class="btn-odd">${g.oX}</div>
+                            <div class="btn-odd">${g.o2}</div>
+                        </div>
                     </div>
+                    <a href="#" class="market-link">+${g.m} Markets</a>
                 </div>`;
         });
     }
-
-    // --- BETSLIP LOGIC ---
-    function selectOdd(btn, val, team) {
-        btn.classList.toggle('selected');
-        
-        if(btn.classList.contains('selected')) {
-            selectedOdds.push(val);
-        } else {
-            selectedOdds = selectedOdds.filter(o => o !== val);
-        }
-
-        updateSlip();
-    }
-
-    function updateSlip() {
-        const bar = document.getElementById('betslip-bar');
-        const count = document.getElementById('betCount');
-        const total = document.getElementById('totalOdds');
-
-        if(selectedOdds.length > 0) {
-            bar.style.display = 'flex';
-            count.innerText = selectedOdds.length;
-            let combined = selectedOdds.reduce((a, b) => a * b, 1).toFixed(2);
-            total.innerText = "Odds: " + combined;
-            document.getElementById('winAmount').innerText = "KES " + (combined * 100).toFixed(2);
-        } else {
-            bar.style.display = 'none';
-        }
-    }
-
-    // --- MODAL & TRANSACTION ---
-    function openBetModal() { document.getElementById('bet-modal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('bet-modal').style.display = 'none'; }
-
-    function confirmBet() {
-        if(currentBalance < 100) {
-            alert("Insufficient Funds!");
-            return;
-        }
-        currentBalance -= 100;
-        document.getElementById('balance').innerText = currentBalance.toFixed(2);
-        alert("🎉 Bet Placed Successfully!");
-        
-        // Reset
-        selectedOdds = [];
-        document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
-        updateSlip();
-        closeModal();
-    }
+    renderMatches();
 </script>
 </body>
 </html>
