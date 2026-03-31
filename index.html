@@ -3,71 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Sports & Casino</title>
+    <title>Pesa ChapChap | Sports Betting Hub</title>
     <style>
-        :root { --bg: #0b011d; --card: #1a1a35; --acc: #00e676; --text: #ffffff; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        header { background: #120129; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2a2a50; position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: 900; color: var(--acc); font-size: 1.2rem; }
-        .balance-box { background: #2a2a50; padding: 5px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--acc); }
+        /* Color Palette and Global Styles */
+        :root {
+            --bg: #0d121c; /* Betika Dark Background */
+            --primary: #ffee00; /* Main Yellow Accents */
+            --text-main: #ffffff;
+            --text-muted: #8c8f94;
+            --border: #242a36;
+            --odds-bg: #242a36;
+        }
         
-        .banner { width: 100%; height: 150px; background: linear-gradient(45deg, #6200ea, #00e676); display: flex; align-items: center; justify-content: center; text-align: center; font-weight: bold; font-size: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        body { background: var(--bg); color: var(--text-main); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; padding-bottom: 70px; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* HEADER: Logo & Top Right Icons */
+        header { background: #0b0f16; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; position: sticky; top: 0; z-index: 1000; }
+        .burger-icon { color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
+        .logo { color: var(--text-main); font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; }
+        .logo-chap { color: var(--primary); font-weight: 900; }
+        .logo-dot { color: #f21818; }
+        .header-icons { display: flex; gap: 15px; align-items: center; color: var(--text-main); font-size: 1.2rem; }
+        .balance-box { background: #ffee00; color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; }
+
+        /* TABS: Horizontally Scrolling Top Menu */
+        .tabs-nav { background: #0b0f16; border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; display: flex; padding: 10px 10px; gap: 10px; scroll-behavior: smooth; }
+        .tabs-nav::-webkit-scrollbar { display: none; } /* Hide Scrollbar */
+        .tab-item { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 60px; padding: 5px; color: var(--text-muted); font-size: 0.7rem; border-radius: 8px; font-weight: bold; }
+        .tab-item.active { color: var(--primary); }
+        .tab-icon { font-size: 1.4rem; margin-bottom: 3px; position: relative; }
+        .tab-new-tag { position: absolute; top: -8px; right: -15px; background: #f21818; color: white; font-size: 0.5rem; padding: 1px 4px; border-radius: 10px; font-weight: bold; }
+
+        /* BANNER (Simulating the Midweek Jackpot) */
+        .promo-banner { background: linear-gradient(135deg, #ffee00 0%, #00d436 100%); color: black; font-weight: 800; text-align: center; padding: 25px 15px; font-size: 1.5rem; text-transform: uppercase; border-radius: 10px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .promo-banner .title { color: #f21818; }
+        .promo-banner .amount { color: #f21818; font-size: 2rem; }
+
+        /* FILTERS BAR */
+        .filters-bar { background: #0b0f16; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 8px 15px; color: var(--text-muted); font-size: 0.8rem; font-weight: bold; overflow-x: auto; gap: 15px; }
+        .filter-item { padding: 4px 8px; border-radius: 6px; }
+        .filter-item.active { background: #181d28; color: var(--primary); }
+        .filter-arrow { font-size: 0.6rem; color: #555; margin-left: 3px; }
+
+        /* ODDS LIST: Brazil vs Croatia etc. */
+        .odds-list { padding: 10px; }
+        .match-card { border-bottom: 1px solid var(--border); padding: 15px 0; }
+        .match-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; align-items: center; }
+        .match-teams { color: var(--text-main); font-weight: bold; font-size: 1rem; margin-bottom: 10px; }
+        .match-odds-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .odd-bubble { background: var(--odds-bg); border-radius: 10px; border: 1px solid var(--border); color: var(--text-main); font-weight: bold; padding: 10px; text-align: center; font-size: 0.95rem; display: flex; justify-content: center; align-items: center; height: 35px; }
+        .odd-label { color: var(--text-muted); font-size: 0.7rem; font-weight: normal; margin-right: 5px; display: none;} /* Betika hides this in main view */
         
-        .section-title { padding: 20px 15px 10px; font-size: 1.1rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .game-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #2a2a50; transition: 0.3s; text-decoration: none; color: white; }
-        .game-card:active { transform: scale(0.95); }
-        .game-img { width: 100%; height: 100px; background: #333; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-        .game-info { padding: 10px; text-align: center; font-weight: bold; }
-        
-        footer { padding: 40px 20px; text-align: center; color: #666; font-size: 0.8rem; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #120129; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #2a2a50; }
-        .nav-item { color: #888; text-decoration: none; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; }
+        /* BOTTOM NAV BAR (Betika Style) */
+        .bottom-nav { background: #0d121c; border-top: 1px solid var(--border); position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--text-muted); font-size: 0.7rem; font-weight: bold; }
+        .nav-link.active { color: var(--primary); }
+        .nav-icon { font-size: 1.4rem; margin-bottom: 3px; }
+        .betslip-bubble { position: absolute; background: var(--primary); color: #000; border-radius: 50%; font-size: 0.65rem; padding: 2px 6px; top: -10px; right: -15px; font-weight: 800; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">PESA CHAPCHAP</div>
-    <div class="balance-box">KES <span id="userBal">0.00</span></div>
+    <div class="burger-icon">☰</div>
+    <div class="logo">
+        <span>PESA </span>
+        <span class="logo-chap"> CHAPCHAP</span>
+        <span class="logo-dot">●</span><span class="logo-chap">com</span>
+    </div>
+    <div class="header-icons">
+        <div class="balance-box">KES <span id="userBal">0.00</span></div>
+        <span>🔍</span>
+        <span>🔔</span>
+    </div>
 </header>
 
-<div class="banner">
-    50% WELCOME BONUS<br>ON FIRST DEPOSIT!
-</div>
-
-<div class="section-title">Popular Games</div>
-<div class="game-grid">
-    <a href="/play" class="game-card">
-        <div class="game-img" style="background: #2a0a4d;">🚀</div>
-        <div class="game-info">Aviator / Crash</div>
-
-    <a href="/sports" class="game-card">
-    <div class="game-img" style="background: #0a3d2a;">⚽</div>
-    <div class="game-info">Sports Betting</div>
-</a>
-
-    <a href="#" class="game-card" onclick="alert('Casino coming soon!')">
-        <div class="game-img" style="background: #4d0a0a;">🎰</div>        <div class="game-info">Casino Slots</div>
+<div class="tabs-nav">
+    <a href="/sports" class="tab-item active">
+        <span class="tab-icon">⚽</span>
+        <span>Soccer</span>
     </a>
-    <a href="#" class="game-card" onclick="alert('Virtuals coming soon!')">
-        <div class="game-img" style="background: #3d3d0a;">🏇</div>
-        <div class="game-info">Virtual Racing</div>
+    <a href="#" class="tab-item" onclick="alert('Coming Soon')">
+        <span class="tab-icon">🏆</span>
+        <span>Ligi Bigi</span>
+    </a>
+    <a href="#" class="tab-item" onclick="alert('Coming Soon')">
+        <span class="tab-icon">🏇<span class="tab-new-tag">New</span></span>
+        <span>Virtuals</span>
+    </a>
+    <a href="/play" class="tab-item">
+        <span class="tab-icon">🚀</span>
+        <span>Aviator</span>
+    </a>
+    <a href="#" class="tab-item" onclick="alert('Coming Soon')">
+        <span class="tab-icon">🎲</span>
+        <span>Casino</span>
     </a>
 </div>
 
-<div class="nav-bar">
-    <a href="/" class="nav-item">🏠<br>Home</a>
-    <a href="/play" class="nav-item">🚀<br>Crash</a>
-    <a href="#" class="nav-item">💳<br>Deposit</a>
-    <a href="/admin" class="nav-item">🛡️<br>Account</a>
+<div class="promo-banner">
+    <span class="title">🏆 OMOKA NA MIDWEEK</span><br>
+    <span class="amount">15 MILLION</span><br>
+    <span>JACKPOT!</span>
 </div>
 
-<script>
-    // Load balance from storage
-    document.getElementById('userBal').innerText = localStorage.getItem('pesa_balance') || '0.00';
-</script>
+<div class="filters-bar">
+    <div class="filter-item active">⚽ Highlights <span class="filter-arrow">▼</span></div>
+    <div class="filter-item">Upcoming</div>
+    <div class="filter-item">Countries</div>
+    <div class="filter-item">Filters <span class="filter-arrow">▼</span></div>
+</div>
 
+<div class="odds-list">
+    <div class="match-card">
+        <div class="match-teams">
+            Brazil<br>Croatia
+        </div>
+        <div class="match-meta">
+            <span>🌍 International • Int. Friendly</span>
+            <span>01/04, 03:00</span>
+        </div>
+        <div class="match-odds-grid">
+            <div class="odd-bubble">1.78</div>
+            <div class="odd-bubble">3.90</div>
+            <div class="odd-bubble">4.10</div>
+        </div>
+    </div>
+    <div class="match-card">
+        <div class="match-teams">
+            Mexico<br>Belgium
+        </div>
+        <div class="match-meta">
+            <span>🌍 International • Int. Friendly</span>
+            <span>01/04, 04:00</span>
+        </div>
+        <div class="match-odds-grid">
+            <div class="odd-bubble">3.60</div>
+            <div class="odd-bubble">3.50</div>
+            <div class="odd-bubble">2.02</div>
+        </div>
+    </div>
+    <div class="match-card">
+        <div class="match-teams">
+            USA<br>Portugal
+        </div>
+        <div class="match-meta">
+            <span>🌍 International • Int. Friendly</span>
+            <span>01/04, 02:00</span>
+        </div>
+        <div class="match-odds-grid">
+            <div class="odd-bubble">4.70</div>
+            <div class="odd-bubble">4.20</div>
+            <div class="odd-bubble">1.63</div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="/" class="nav-link active">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </a>
+    <a href="/live" class="nav-link">
+        <span class="nav-icon">⏱️</span>
+        <span>Live</span>
+    </a>
+    <a href="/deposit" class="nav-link" style="position: relative;">
+        <span class="nav-icon" style="font-size: 2rem; background: var(--primary); color:black; border-radius: 50%; padding: 5px; border:3px solid black; position: absolute; top:-30px;">💳</span>
+        <span style="margin-top:20px">Deposit</span>
+    </a>
+    <a href="/mybets" class="nav-link">
+        <span class="nav-icon">📋</span>
+        <span>My Bets</span>
+    </a>
+    <a href="/admin" class="nav-link">
+        <span class="nav-icon">👤</span>
+        <span>Profile</span>
+    </a>
+</div>
+
+<script>document.getElementById('userBal').innerText = localStorage.getItem('pesa_balance') || '0.00';</script>
 </body>
 </html>
