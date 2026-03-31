@@ -12,7 +12,7 @@
             --text-main: #ffffff;
             --text-muted: #8e8fa3;
             --border: #1f2533;
-            --odd-bg: #222834; /* Professional dark grey for odds */
+            --odd-bg: #222834;
         }
 
         body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 90px; }
@@ -28,10 +28,6 @@
         .nav-icon-item { display: flex; flex-direction: column; align-items: center; min-width: 55px; color: var(--text-muted); text-decoration: none; font-size: 0.65rem; font-weight: bold; }
         .nav-icon-item.active { color: var(--neon-green); }
 
-        /* JACKPOT BANNER */
-        .banner { background: linear-gradient(90deg, #00e676, #b2ff59); margin: 12px; padding: 15px; border-radius: 8px; color: #000; font-weight: 900; text-align: center; }
-        .banner h2 { margin: 0; font-size: 1rem; text-transform: uppercase; }
-
         /* ODDS TABLE HEADERS */
         .odds-header { display: flex; padding: 10px 15px; font-size: 0.7rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid var(--border); }
         .teams-col { flex: 2; }
@@ -43,24 +39,14 @@
         .team-name { font-weight: bold; font-size: 0.95rem; }
         .match-meta { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
 
-        /* REFINED ODDS BUTTONS */
+        /* ODDS BUTTONS */
         .odds-container { flex: 3; display: flex; gap: 10px; justify-content: flex-end; }
         .btn-odd { 
-            background: var(--odd-bg); 
-            border: 1px solid #2d3446; 
-            color: white; 
-            border-radius: 10px; /* Refined rounded rectangle */
-            width: 65px; 
-            height: 44px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: 800; 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            transition: 0.15s; 
+            background: var(--odd-bg); border: 1px solid #2d3446; color: white; border-radius: 10px; 
+            width: 65px; height: 44px; display: flex; align-items: center; justify-content: center; 
+            font-weight: 800; font-size: 0.85rem; cursor: pointer; 
         }
-        .btn-odd:active { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
+        .btn-odd:active { background: var(--neon-green); color: #000; }
 
         /* BOTTOM NAV */
         .bottom-nav { background: #0b0f16; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
@@ -82,12 +68,8 @@
     <a href="#" class="nav-icon-item">🎲<br>Casino</a>
 </div>
 
-<div class="banner">
-    <h2>🏆 OMOKA NA MIDWEEK<br>15 MILLION JACKPOT!</h2>
-</div>
-
 <div class="odds-header">
-    <div class="teams-col">Teams</div>
+    <div class="teams-col">Upcoming Matches</div>
     <div class="odds-col"><span>1</span><span>X</span><span>2</span></div>
 </div>
 
@@ -101,35 +83,46 @@
 </div>
 
 <script>
-    const matches = [
-        { teams: ["Brazil", "Croatia"], time: "01/04, 03:00", odds: [1.78, 3.90, 4.10] },
-        { teams: ["Mexico", "Belgium"], time: "01/04, 04:00", odds: [3.60, 3.50, 2.02] },
-        { teams: ["USA", "Portugal"], time: "01/04, 02:00", odds: [4.70, 4.20, 1.63] },
-        { teams: ["Argentina", "Zambia"], time: "01/04, 02:30", odds: [1.05, 13.0, 35.0] }
-    ];
+    // List of potential teams to randomize
+    const teamPool = ["Arsenal", "Man City", "Chelsea", "Liverpool", "Real Madrid", "Barcelona", "PSG", "Bayern", "Man Utd", "Juventus", "AC Milan", "Gor Mahia", "AFC Leopards", "Tusker FC"];
 
-    function loadMatches() {
+    function generateAutomaticMatches(count) {
         const container = document.getElementById('matchContainer');
-        matches.forEach(m => {
+        container.innerHTML = ""; // Clear old matches
+
+        for (let i = 0; i < count; i++) {
+            // Pick two different random teams
+            let team1 = teamPool[Math.floor(Math.random() * teamPool.length)];
+            let team2 = teamPool[Math.floor(Math.random() * teamPool.length)];
+            while(team1 === team2) { team2 = teamPool[Math.floor(Math.random() * teamPool.length)]; }
+
+            // Randomize odds between 1.05 and 15.00
+            let odd1 = (Math.random() * 4 + 1.1).toFixed(2);
+            let oddX = (Math.random() * 3 + 2.5).toFixed(2);
+            let odd2 = (Math.random() * 5 + 1.5).toFixed(2);
+
             container.innerHTML += `
                 <div class="match-row">
                     <div class="match-teams">
-                        <div class="match-meta">⚽ Int. Friendly • ${m.time}</div>
-                        <span class="team-name">${m.teams[0]}</span>
-                        <span class="team-name">${m.teams[1]}</span>
+                        <div class="match-meta">⚽ Soccer • Today, ${10 + i}:00</div>
+                        <span class="team-name">${team1}</span>
+                        <span class="team-name">${team2}</span>
                     </div>
                     <div class="odds-container">
-                        <div class="btn-odd">${m.odds[0].toFixed(2)}</div>
-                        <div class="btn-odd">${m.odds[1].toFixed(2)}</div>
-                        <div class="btn-odd">${m.odds[2].toFixed(2)}</div>
+                        <div class="btn-odd">${odd1}</div>
+                        <div class="btn-odd">${oddX}</div>
+                        <div class="btn-odd">${odd2}</div>
                     </div>
                 </div>`;
-        });
+        }
     }
 
+    // Sync Balance
     let rawBal = localStorage.getItem('pesa_balance');
     document.getElementById('userBal').innerText = (rawBal === null || rawBal === "NaN") ? "0.00" : parseFloat(rawBal).toFixed(2);
-    loadMatches();
+
+    // Generate 15 matches automatically on load
+    generateAutomaticMatches(15);
 </script>
 </body>
 </html>
