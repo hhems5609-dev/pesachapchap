@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Sports</title>
+    <title>Pesa ChapChap | Live Sports</title>
     <style>
-        /* Aviator Theme Palette */
         :root {
-            --bg-deep: #141526;      /* Main background */
-            --bg-card: #1f203a;      /* Card background */
-            --neon-green: #00e676;   /* Deposit/Highlight green */
-            --neon-purple: #9c27b0;  /* Banner/Icon purple */
+            --bg-deep: #141526;
+            --bg-card: #1f203a;
+            --neon-green: #00e676;
+            --neon-purple: #9c27b0;
+            --live-red: #ff3d00;
             --text-main: #ffffff;
             --text-muted: #8e8fa3;
             --border: #2d2e4d;
@@ -18,23 +18,29 @@
 
         body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 100px; }
 
-        /* Header with Neon Green Balance */
+        /* Header & Balance */
         header { background: #1a1b31; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: 900; font-size: 1.1rem; letter-spacing: 1px; }
+        .logo { font-weight: 900; font-size: 1.1rem; }
         .logo span { color: var(--neon-green); }
         .bal-container { background: #111221; border: 1px solid var(--neon-green); padding: 5px 12px; border-radius: 6px; font-weight: bold; color: var(--neon-green); }
 
-        /* Banner with Purple Gradient */
-        .promo-banner { 
-            background: linear-gradient(90deg, #6a1b9a, #283593); 
-            margin: 15px; padding: 20px; border-radius: 12px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+        /* LIVE Flashing Animation */
+        .live-tag {
+            color: var(--live-red);
+            font-weight: 800;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            animation: blink 1.5s infinite;
         }
-        .promo-banner h3 { margin: 0; color: #fff; font-size: 1.2rem; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .live-dot { width: 6px; height: 6px; background: var(--live-red); border-radius: 50%; }
 
-        /* Matches styled like Aviator Panels */
-        .match-card { background: var(--bg-card); margin: 0 15px 12px 15px; padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
-        .match-meta { font-size: 0.7rem; color: var(--neon-purple); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+        /* Match Cards */
+        .match-card { background: var(--bg-card); margin: 12px 15px; padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .match-meta { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .league { font-size: 0.65rem; color: var(--neon-purple); font-weight: bold; text-transform: uppercase; }
         .teams { font-weight: bold; font-size: 1rem; margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
         
         .odds-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -43,18 +49,18 @@
             padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;
             font-weight: bold; transition: 0.2s;
         }
-        .odd-btn:active { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
+        .odd-btn:active, .odd-btn.selected { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
 
-        /* Floating Slip with Neon Theme */
+        /* Betslip */
         #betslip { 
             position: fixed; bottom: 80px; left: 5%; width: 90%; 
             background: #1f203a; border: 2px solid var(--neon-green); color: #fff; 
             padding: 15px; border-radius: 12px; display: none; flex-direction: column;
-            box-shadow: 0 0 20px rgba(0, 230, 118, 0.2); z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.3); z-index: 1000;
         }
-        .place-btn { background: var(--neon-green); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 800; width: 100%; margin-top: 10px; }
+        .place-btn { background: var(--neon-green); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 800; width: 100%; margin-top: 10px; cursor: pointer; }
 
-        /* Bottom Nav with Neon Icons */
+        /* Navigation */
         .nav { position: fixed; bottom: 0; width: 100%; background: #1a1b31; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
         .nav-item { color: var(--text-muted); text-decoration: none; font-size: 0.7rem; text-align: center; }
         .nav-item.active { color: var(--neon-green); }
@@ -67,22 +73,17 @@
     <div class="bal-container">KES <span id="displayBal">0.00</span></div>
 </header>
 
-<div class="promo-banner">
-    <h3>🚀 WELCOME BONUS: +50%</h3>
-    <p style="margin:5px 0 0 0; font-size:0.8rem; opacity:0.8;">On your first deposit via M-Pesa</p>
-</div>
-
 <div id="matchList"></div>
 
 <div id="betslip">
     <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-        <span id="slipMatch" style="font-size:0.9rem;">Match</span>
-        <span id="slipOdd" style="color:var(--neon-green);">0.00</span>
+        <span id="slipMatch" style="font-size:0.9rem; font-weight:bold;">Match</span>
+        <span id="slipOdd" style="color:var(--neon-green); font-weight:bold;">x0.00</span>
     </div>
-    <input type="number" id="stake" style="background:#141526; border:1px solid var(--border); color:#fff; padding:12px; border-radius:8px; margin-bottom:10px;" placeholder="Stake Amount" oninput="updateWin()">
+    <input type="number" id="stake" style="background:#141526; border:1px solid var(--border); color:#fff; padding:12px; border-radius:8px; margin-bottom:10px; outline:none;" placeholder="Stake Amount" oninput="updateWin()">
     <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:10px;">
-        <span>Est. Payout:</span>
-        <span id="posWin" style="color:var(--neon-green); font-weight:bold;">0.00</span>
+        <span>Potential Payout:</span>
+        <span id="posWin" style="color:var(--neon-green); font-weight:bold;">KES 0.00</span>
     </div>
     <button class="place-btn" onclick="placeBet()">PLACE BET</button>
 </div>
@@ -100,33 +101,51 @@
     document.getElementById('displayBal').innerText = currentBalance.toFixed(2);
 
     const matches = [
-        { teams: "Man United vs Arsenal", time: "LIVE 72'", odds: [2.10, 3.40, 1.95] },
-        { teams: "Real Madrid vs Barcelona", time: "TODAY 21:00", odds: [1.80, 3.10, 2.50] },
-        { teams: "Liverpool vs Chelsea", time: "TODAY 22:30", odds: [2.00, 3.50, 3.00] },
-        { teams: "Bayern vs Dortmund", time: "TOMORROW 19:30", odds: [1.55, 4.20, 5.80] }
+        { teams: "Manchester Utd vs Arsenal", league: "Premier League", time: "72'", isLive: true, odds: [2.15, 3.10, 1.95] },
+        { teams: "Real Madrid vs Barcelona", league: "La Liga", time: "18'", isLive: true, odds: [1.85, 3.40, 2.60] },
+        { teams: "Gor Mahia vs AFC Leopards", league: "FKF Premier League", time: "Today 15:00", isLive: false, odds: [1.70, 2.80, 4.50] },
+        { teams: "Liverpool vs Chelsea", league: "Premier League", time: "Today 22:30", isLive: false, odds: [1.90, 3.60, 3.20] },
+        { teams: "Bayern vs Dortmund", league: "Bundesliga", time: "Tomorrow 19:30", isLive: false, odds: [1.45, 4.50, 6.20] }
     ];
 
     let selectedOdd = 0;
+    let selectedMatchTeams = "";
+
     function loadMatches() {
         const container = document.getElementById('matchList');
+        container.innerHTML = ""; 
         matches.forEach(m => {
+            const statusHtml = m.isLive 
+                ? `<div class="live-tag"><div class="live-dot"></div> LIVE ${m.time}</div>` 
+                : `<div style="font-size:0.7rem; color:var(--text-muted);">${m.time}</div>`;
+
             container.innerHTML += `
                 <div class="match-card">
-                    <div class="match-meta">⚽ ${m.time}</div>
-                    <div class="teams"><span>${m.teams.split(' vs ')[0]}</span><span>${m.teams.split(' vs ')[1]}</span></div>
+                    <div class="match-meta">
+                        <div class="league">${m.league}</div>
+                        ${statusHtml}
+                    </div>
+                    <div class="teams">
+                        <span>${m.teams.split(' vs ')[0]}</span>
+                        <span>${m.teams.split(' vs ')[1]}</span>
+                    </div>
                     <div class="odds-row">
-                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[0]})">${m.odds[0]}</div>
-                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[1]})">${m.odds[1]}</div>
-                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[2]})">${m.odds[2]}</div>
+                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[0]}, this)">${m.odds[0]}</div>
+                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[1]}, this)">${m.odds[1]}</div>
+                        <div class="odd-btn" onclick="openSlip('${m.teams}', ${m.odds[2]}, this)">${m.odds[2]}</div>
                     </div>
                 </div>`;
         });
     }
 
-    function openSlip(teams, odd) {
+    function openSlip(teams, odd, element) {
+        document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
+        element.classList.add('selected');
+        
         selectedOdd = odd;
+        selectedMatchTeams = teams;
         document.getElementById('slipMatch').innerText = teams;
-        document.getElementById('slipOdd').innerText = 'x' + odd;
+        document.getElementById('slipOdd').innerText = 'x' + odd.toFixed(2);
         document.getElementById('betslip').style.display = 'flex';
         updateWin();
     }
@@ -138,14 +157,19 @@
 
     function placeBet() {
         const stake = parseFloat(document.getElementById('stake').value);
-        if (stake > currentBalance) return alert("Insufficient Balance!");
-        if (stake < 10) return alert("Min bet KES 10");
+        if (!stake || stake < 10) return alert("Minimum stake is KES 10");
+        if (stake > currentBalance) return alert("Insufficient Balance! Please Deposit.");
+
         currentBalance -= stake;
         localStorage.setItem('pesa_balance', currentBalance.toFixed(2));
         document.getElementById('displayBal').innerText = currentBalance.toFixed(2);
-        alert("✔️ BET PLACED!");
+        
+        alert("✔️ Bet Placed on " + selectedMatchTeams);
         document.getElementById('betslip').style.display = 'none';
+        document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('stake').value = "";
     }
+
     loadMatches();
 </script>
 </body>
