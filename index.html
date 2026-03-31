@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Sports</title>
+    <title>Pesa ChapChap | Pro Sports</title>
     <style>
         :root {
             --bg-deep: #0d121c;
             --bg-card: #141a26;
             --neon-green: #00e676;
-            --neon-purple: #9c27b0;
-            --live-red: #ff3d00;
             --text-main: #ffffff;
             --text-muted: #8e8fa3;
             --border: #1f2533;
+            --odd-bg: #222834; /* Professional dark grey for odds */
         }
 
         body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 90px; }
@@ -23,32 +22,45 @@
         .logo { font-weight: 900; font-size: 1.1rem; color: var(--neon-green); text-decoration:none; }
         .bal-box { background: #ffee00; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; }
 
-        /* TOP HORIZONTAL MENU (Matches) */
+        /* TOP MENU */
         .game-nav { display: flex; overflow-x: auto; background: #0b0f16; padding: 10px; gap: 20px; border-bottom: 1px solid var(--border); }
         .game-nav::-webkit-scrollbar { display: none; }
         .nav-icon-item { display: flex; flex-direction: column; align-items: center; min-width: 55px; color: var(--text-muted); text-decoration: none; font-size: 0.65rem; font-weight: bold; }
         .nav-icon-item.active { color: var(--neon-green); }
-        .icon-bg { font-size: 1.3rem; margin-bottom: 5px; }
 
-        /* PROMO BANNER */
-        .banner { background: linear-gradient(90deg, #00c853, #b2ff59); margin: 12px; padding: 15px; border-radius: 8px; color: #000; font-weight: 900; text-align: center; position: relative; overflow: hidden; }
-        .banner h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; }
+        /* JACKPOT BANNER */
+        .banner { background: linear-gradient(90deg, #00e676, #b2ff59); margin: 12px; padding: 15px; border-radius: 8px; color: #000; font-weight: 900; text-align: center; }
+        .banner h2 { margin: 0; font-size: 1rem; text-transform: uppercase; }
 
-        /* MATCH LISTING */
+        /* ODDS TABLE HEADERS */
         .odds-header { display: flex; padding: 10px 15px; font-size: 0.7rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid var(--border); }
-        .odds-header .teams-col { flex: 2; }
-        .odds-header .odds-col { flex: 3; display: flex; justify-content: space-around; }
+        .teams-col { flex: 2; }
+        .odds-col { flex: 3; display: flex; justify-content: flex-end; gap: 45px; padding-right: 15px; }
 
+        /* MATCH ROWS */
         .match-row { display: flex; padding: 15px; border-bottom: 1px solid var(--border); align-items: center; }
-        .match-teams { flex: 2; display: flex; flex-direction: column; gap: 3px; }
-        .team-name { font-weight: bold; font-size: 0.9rem; }
-        .match-meta { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
-        .live-label { color: var(--live-red); font-weight: 800; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .match-teams { flex: 2; display: flex; flex-direction: column; gap: 4px; }
+        .team-name { font-weight: bold; font-size: 0.95rem; }
+        .match-meta { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
 
-        .odds-container { flex: 3; display: flex; gap: 8px; justify-content: flex-end; }
-        .btn-odd { background: #1f2533; border: 1px solid #2d3446; color: white; border-radius: 6px; width: 55px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
-        .btn-odd:active { background: var(--neon-green); color: #000; }
+        /* REFINED ODDS BUTTONS */
+        .odds-container { flex: 3; display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-odd { 
+            background: var(--odd-bg); 
+            border: 1px solid #2d3446; 
+            color: white; 
+            border-radius: 10px; /* Refined rounded rectangle */
+            width: 65px; 
+            height: 44px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 800; 
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            transition: 0.15s; 
+        }
+        .btn-odd:active { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
 
         /* BOTTOM NAV */
         .bottom-nav { background: #0b0f16; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
@@ -59,16 +71,15 @@
 <body>
 
 <header>
-    <a href="/" class="logo">PESA<span>CHAPCHAP</span></a>
+    <div class="logo">PESA CHAPCHAP</div>
     <div class="bal-box">KES <span id="userBal">0.00</span></div>
 </header>
 
 <div class="game-nav">
-    <a href="/" class="nav-icon-item active"><span class="icon-bg">⚽</span>Soccer</a>
-    <a href="/play" class="nav-icon-item"><span class="icon-bg">🚀</span>Aviator</a>
-    <a href="#" class="nav-icon-item"><span class="icon-bg">🏆</span>Virtuals</a>
-    <a href="#" class="nav-icon-item"><span class="icon-bg">🎲</span>Casino</a>
-    <a href="#" class="nav-item">More</a>
+    <a href="/" class="nav-icon-item active">⚽<br>Soccer</a>
+    <a href="/play" class="nav-icon-item">🚀<br>Aviator</a>
+    <a href="#" class="nav-icon-item">🏇<br>Virtuals</a>
+    <a href="#" class="nav-icon-item">🎲<br>Casino</a>
 </div>
 
 <div class="banner">
@@ -91,27 +102,26 @@
 
 <script>
     const matches = [
-        { teams: ["Brazil", "Croatia"], time: "01/04, 03:00", odds: [1.78, 3.90, 4.10], isLive: true },
-        { teams: ["Mexico", "Belgium"], time: "01/04, 04:00", odds: [3.60, 3.50, 2.02], isLive: false },
-        { teams: ["USA", "Portugal"], time: "01/04, 02:00", odds: [4.70, 4.20, 1.63], isLive: false },
-        { teams: ["Argentina", "Zambia"], time: "01/04, 02:30", odds: [1.05, 13.0, 35.0], isLive: true }
+        { teams: ["Brazil", "Croatia"], time: "01/04, 03:00", odds: [1.78, 3.90, 4.10] },
+        { teams: ["Mexico", "Belgium"], time: "01/04, 04:00", odds: [3.60, 3.50, 2.02] },
+        { teams: ["USA", "Portugal"], time: "01/04, 02:00", odds: [4.70, 4.20, 1.63] },
+        { teams: ["Argentina", "Zambia"], time: "01/04, 02:30", odds: [1.05, 13.0, 35.0] }
     ];
 
     function loadMatches() {
         const container = document.getElementById('matchContainer');
         matches.forEach(m => {
-            const liveTag = m.isLive ? '<span class="live-label">● LIVE</span>' : '';
             container.innerHTML += `
                 <div class="match-row">
                     <div class="match-teams">
-                        <div class="match-meta">⚽ International • ${m.time} ${liveTag}</div>
+                        <div class="match-meta">⚽ Int. Friendly • ${m.time}</div>
                         <span class="team-name">${m.teams[0]}</span>
                         <span class="team-name">${m.teams[1]}</span>
                     </div>
                     <div class="odds-container">
-                        <div class="btn-odd" onclick="alert('Betting on ${m.teams[0]}')">${m.odds[0]}</div>
-                        <div class="btn-odd" onclick="alert('Betting on Draw')">${m.odds[1]}</div>
-                        <div class="btn-odd" onclick="alert('Betting on ${m.teams[1]}')">${m.odds[2]}</div>
+                        <div class="btn-odd">${m.odds[0].toFixed(2)}</div>
+                        <div class="btn-odd">${m.odds[1].toFixed(2)}</div>
+                        <div class="btn-odd">${m.odds[2].toFixed(2)}</div>
                     </div>
                 </div>`;
         });
