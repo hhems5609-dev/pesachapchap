@@ -1,4 +1,3 @@
-cat <<EOF > server.py
 import os
 import uvicorn
 from fastapi import FastAPI, Request
@@ -24,4 +23,3 @@ async def play_video(request: Request):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
-EOF
