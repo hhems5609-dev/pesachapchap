@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deposit | Pesa Chapchap</title>
+    <style>
+        body { background: #0b011d; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #1a1a35; padding: 20px; border-radius: 15px; border: 1px solid #00e676; margin-top: 20px; }
+        input { width: 80%; padding: 15px; margin: 10px 0; border-radius: 5px; border: none; font-size: 1.1rem; }
+        .btn { background: #00e676; color: black; padding: 15px 30px; border: none; border-radius: 5px; font-weight: bold; width: 100%; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>💳 Deposit via M-PESA</h2>
+    <div class="card">
+        <p>Enter Amount to Deposit</p>
+        <input type="number" id="amount" placeholder="KES e.g. 500">
+        <button class="btn" onclick="processDeposit()">STK PUSH</button>
+    </div>
+    <script>
+        function processDeposit() {
+            let amt = document.getElementById('amount').value;
+            if(amt < 1) return alert("Enter valid amount");
+            alert("STK Push Sent to your phone! (Simulated)");
+            let bal = parseFloat(localStorage.getItem('pesa_balance') || 0);
+            localStorage.setItem('pesa_balance', (bal + parseFloat(amt)).toFixed(2));
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
