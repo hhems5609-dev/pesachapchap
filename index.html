@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Pro Sports</title>
+    <title>Pesa ChapChap | Dashboard</title>
     <style>
         :root {
             --bg-deep: #0d121c;
@@ -12,117 +12,98 @@
             --text-main: #ffffff;
             --text-muted: #8e8fa3;
             --border: #1f2533;
-            --odd-bg: #222834;
+            --dash-bg: #1c222e;
         }
 
-        body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 90px; }
+        body { background: var(--bg-deep); color: var(--text-main); font-family: sans-serif; margin: 0; overflow-x: hidden; }
 
         /* HEADER */
-        header { background: #0b0f16; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-weight: 900; font-size: 1.1rem; color: var(--neon-green); text-decoration:none; }
-        .bal-box { background: #ffee00; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; }
-
-        /* TOP MENU */
-        .game-nav { display: flex; overflow-x: auto; background: #0b0f16; padding: 10px; gap: 20px; border-bottom: 1px solid var(--border); }
-        .game-nav::-webkit-scrollbar { display: none; }
-        .nav-icon-item { display: flex; flex-direction: column; align-items: center; min-width: 55px; color: var(--text-muted); text-decoration: none; font-size: 0.65rem; font-weight: bold; }
-        .nav-icon-item.active { color: var(--neon-green); }
-
-        /* ODDS TABLE HEADERS */
-        .odds-header { display: flex; padding: 10px 15px; font-size: 0.7rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid var(--border); }
-        .teams-col { flex: 2; }
-        .odds-col { flex: 3; display: flex; justify-content: flex-end; gap: 45px; padding-right: 15px; }
-
-        /* MATCH ROWS */
-        .match-row { display: flex; padding: 15px; border-bottom: 1px solid var(--border); align-items: center; }
-        .match-teams { flex: 2; display: flex; flex-direction: column; gap: 4px; }
-        .team-name { font-weight: bold; font-size: 0.95rem; }
-        .match-meta { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
-
-        /* ODDS BUTTONS */
-        .odds-container { flex: 3; display: flex; gap: 10px; justify-content: flex-end; }
-        .btn-odd { 
-            background: var(--odd-bg); border: 1px solid #2d3446; color: white; border-radius: 10px; 
-            width: 65px; height: 44px; display: flex; align-items: center; justify-content: center; 
-            font-weight: 800; font-size: 0.85rem; cursor: pointer; 
+        header { 
+            background: #0b0f16; padding: 10px 15px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; 
         }
-        .btn-odd:active { background: var(--neon-green); color: #000; }
+        .menu-trigger { font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
+        .logo-pesa { font-weight: 900; color: #fff; font-style: italic; }
+        .logo-chap { color: var(--neon-green); font-weight: 900; font-style: italic; }
 
-        /* BOTTOM NAV */
-        .bottom-nav { background: #0b0f16; position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
-        .nav-btn { color: var(--text-muted); text-decoration: none; font-size: 0.7rem; text-align: center; font-weight: bold; }
-        .nav-btn.active { color: var(--neon-green); }
+        /* DASHBOARD / SIDEBAR */
+        #dashboard {
+            position: fixed; top: 0; left: -100%; width: 80%; height: 100%;
+            background: var(--dash-bg); z-index: 2000; transition: 0.3s;
+            box-shadow: 10px 0 20px rgba(0,0,0,0.5); overflow-y: auto;
+        }
+        #dashboard.active { left: 0; }
+        .dash-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .close-btn { font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+
+        /* DASHBOARD LISTINGS */
+        .dash-list { list-style: none; padding: 0; margin: 0; }
+        .dash-item {
+            display: flex; align-items: center; padding: 18px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            text-decoration: none; color: var(--text-main); font-weight: bold; font-size: 0.95rem;
+        }
+        .dash-item:active { background: rgba(0, 230, 118, 0.1); }
+        .dash-icon { margin-right: 15px; font-size: 1.2rem; width: 25px; text-align: center; }
+        .badge-new { background: #ffee00; color: #000; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-left: 10px; }
+
+        /* OVERLAY */
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 1500;
+        }
+
+        /* MAIN CONTENT PLACEHOLDER */
+        .main-content { padding: 20px; text-align: center; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
+<div id="overlay" onclick="toggleDash()"></div>
+
+<div id="dashboard">
+    <div class="dash-header">
+        <div style="font-weight:900;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
+        <div class="close-btn" onclick="toggleDash()">✕</div>
+    </div>
+    <nav class="dash-list">
+        <a href="#" class="dash-item"><span class="dash-icon">🏟️</span> Prematch</a>
+        <a href="#" class="dash-item"><span class="dash-icon">📡</span> Live Games</a>
+        <a href="#" class="dash-item"><span class="dash-icon">🏆</span> Jackpots</a>
+        <a href="/play" class="dash-item"><span class="dash-icon">🚀</span> Aviator</a>
+        <a href="#" class="dash-item"><span class="dash-icon">🎰</span> Casino Games</a>
+        <a href="#" class="dash-item"><span class="dash-icon">🏇</span> Virtuals</a>
+        <a href="#" class="dash-item"><span class="dash-icon">🎁</span> Promotions <span class="badge-new">NEW</span></a>
+    </nav>
+</div>
+
 <header>
-    <div class="logo">PESA CHAPCHAP</div>
-    <div class="bal-box">KES <span id="userBal">0.00</span></div>
+    <div class="menu-trigger" onclick="toggleDash()">☰</div>
+    <div style="font-size:1.1rem;"><span class="logo-pesa">PESA</span><span class="logo-chap">CHAPCHAP</span></div>
+    <div style="background:#ffee00; color:#000; padding:4px 10px; border-radius:20px; font-weight:800; font-size:0.8rem;">
+        KES <span id="userBal">0.00</span>
+    </div>
 </header>
 
-<div class="game-nav">
-    <a href="/" class="nav-icon-item active">⚽<br>Soccer</a>
-    <a href="/play" class="nav-icon-item">🚀<br>Aviator</a>
-    <a href="#" class="nav-icon-item">🏇<br>Virtuals</a>
-    <a href="#" class="nav-icon-item">🎲<br>Casino</a>
-</div>
-
-<div class="odds-header">
-    <div class="teams-col">Upcoming Matches</div>
-    <div class="odds-col"><span>1</span><span>X</span><span>2</span></div>
-</div>
-
-<div id="matchContainer"></div>
-
-<div class="bottom-nav">
-    <a href="/" class="nav-btn active">🏠<br>Home</a>
-    <a href="#" class="nav-btn">📡<br>Live</a>
-    <a href="/deposit" class="nav-btn">💳<br>Deposit</a>
-    <a href="/admin" class="nav-btn">👤<br>Account</a>
+<div class="main-content">
+    <div style="background:linear-gradient(90deg, #00e676, #b2ff59); color:#000; padding:30px; border-radius:12px; font-weight:900; margin-bottom:20px;">
+        OMOKA NA MIDWEEK<br>15 MILLION JACKPOT!
+    </div>
+    <p>Click the ☰ menu to see your new Dashboard listings!</p>
 </div>
 
 <script>
-    // List of potential teams to randomize
-    const teamPool = ["Arsenal", "Man City", "Chelsea", "Liverpool", "Real Madrid", "Barcelona", "PSG", "Bayern", "Man Utd", "Juventus", "AC Milan", "Gor Mahia", "AFC Leopards", "Tusker FC"];
-
-    function generateAutomaticMatches(count) {
-        const container = document.getElementById('matchContainer');
-        container.innerHTML = ""; // Clear old matches
-
-        for (let i = 0; i < count; i++) {
-            // Pick two different random teams
-            let team1 = teamPool[Math.floor(Math.random() * teamPool.length)];
-            let team2 = teamPool[Math.floor(Math.random() * teamPool.length)];
-            while(team1 === team2) { team2 = teamPool[Math.floor(Math.random() * teamPool.length)]; }
-
-            // Randomize odds between 1.05 and 15.00
-            let odd1 = (Math.random() * 4 + 1.1).toFixed(2);
-            let oddX = (Math.random() * 3 + 2.5).toFixed(2);
-            let odd2 = (Math.random() * 5 + 1.5).toFixed(2);
-
-            container.innerHTML += `
-                <div class="match-row">
-                    <div class="match-teams">
-                        <div class="match-meta">⚽ Soccer • Today, ${10 + i}:00</div>
-                        <span class="team-name">${team1}</span>
-                        <span class="team-name">${team2}</span>
-                    </div>
-                    <div class="odds-container">
-                        <div class="btn-odd">${odd1}</div>
-                        <div class="btn-odd">${oddX}</div>
-                        <div class="btn-odd">${odd2}</div>
-                    </div>
-                </div>`;
-        }
+    function toggleDash() {
+        const dash = document.getElementById('dashboard');
+        const overlay = document.getElementById('overlay');
+        dash.classList.toggle('active');
+        overlay.style.display = dash.classList.contains('active') ? 'block' : 'none';
     }
 
-    // Sync Balance
+    // Load Balance
     let rawBal = localStorage.getItem('pesa_balance');
     document.getElementById('userBal').innerText = (rawBal === null || rawBal === "NaN") ? "0.00" : parseFloat(rawBal).toFixed(2);
-
-    // Generate 15 matches automatically on load
-    generateAutomaticMatches(15);
 </script>
 </body>
 </html>
