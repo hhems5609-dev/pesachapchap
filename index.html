@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Full Pro</title>
+    <title>Pesa ChapChap | Pro Betting & Aviator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-body: #0d121c;
             --bg-card: #141a26;
             --neon-green: #00e676;
+            --neon-red: #ff3d00;
             --border: #1f2533;
             --text-muted: #8e8fa3;
             --dash-width: 280px;
@@ -17,42 +18,34 @@
 
         body { background: var(--bg-body); color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        /* SIDE DASHBOARD */
+        /* SIDEBAR DASHBOARD */
         #dashboard {
             position: fixed; top: 0; left: calc(-1 * var(--dash-width)); width: var(--dash-width);
-            height: 100%; background: #1c222e; z-index: 3000; transition: 0.3s cubic-bezier(0, 0, 0.2, 1);
+            height: 100%; background: #1c222e; z-index: 4000; transition: 0.3s cubic-bezier(0, 0, 0.2, 1);
             display: flex; flex-direction: column; box-shadow: 10px 0 30px rgba(0,0,0,0.5);
         }
         #dashboard.active { left: 0; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 2500; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 3500; }
 
-        .dash-header { padding: 20px; font-weight: 900; border-bottom: 1px solid var(--border); font-size: 1.2rem; }
-        .dash-item { padding: 15px 20px; display: flex; align-items: center; gap: 15px; text-decoration: none; color: #fff; font-weight: 600; border-bottom: 1px solid var(--border); }
-        .pref-section { padding: 20px; border-top: 1px solid var(--border); margin-top: auto; background: #141a26; }
+        .dash-header { padding: 20px; font-weight: 900; border-bottom: 1px solid var(--border); font-size: 1.2rem; display: flex; justify-content: space-between; }
+        .dash-item { padding: 15px 20px; display: flex; align-items: center; gap: 15px; text-decoration: none; color: #fff; font-weight: 600; border-bottom: 1px solid var(--border); cursor: pointer; }
         
-        /* TOGGLE SWITCH */
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--neon-green); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        /* MAIN UI */
-        header { 
-            background: #141a26; padding: 12px 15px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; 
+        /* AVIATOR GAME LAYER */
+        #aviator-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 5000; display: none; flex-direction: column;
         }
-        .menu-trigger { font-size: 1.5rem; cursor: pointer; padding-right: 10px; }
+        .aviator-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; background: radial-gradient(circle, #2c0a0a 0%, #000 100%); }
+        .multiplier { font-size: 4rem; font-weight: 900; color: #fff; z-index: 10; }
+        .plane { font-size: 3rem; position: absolute; bottom: 20%; left: 10%; transition: all 0.1s linear; z-index: 5; }
+        .aviator-controls { padding: 20px; background: #141a26; display: flex; gap: 10px; }
+        .bet-btn { flex: 1; background: var(--neon-green); color: #000; border: none; padding: 20px; border-radius: 10px; font-weight: 900; font-size: 1.2rem; }
+        .cashout-btn { flex: 1; background: #ffc107; color: #000; border: none; padding: 20px; border-radius: 10px; font-weight: 900; font-size: 1.2rem; display: none; }
+
+        /* MAIN UI STYLES */
+        header { background: #141a26; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .menu-trigger { font-size: 1.5rem; cursor: pointer; }
         .bal-box { background: #ffee00; color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
-
-        .sports-nav { display: flex; overflow-x: auto; padding: 10px; gap: 20px; background: #141a26; border-bottom: 1px solid var(--border); }
-        .sport-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; min-width: 55px; color: var(--text-muted); }
-        .sport-item.active { color: var(--neon-green); }
-
-        .banner { background: linear-gradient(90deg, #00e676, #b2ff59); margin: 12px; padding: 15px; border-radius: 10px; color: #000; text-align: center; font-weight: 900; font-size: 0.85rem; }
-
         .match-row { padding: 12px 15px; border-bottom: 1px solid var(--border); }
         .match-main { display: flex; align-items: center; margin-top: 5px; }
         .match-teams { flex: 2; display: flex; flex-direction: column; }
@@ -66,49 +59,48 @@
 <div id="overlay" onclick="toggleDash()"></div>
 
 <div id="dashboard">
-    <div class="dash-header">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
-    <div style="overflow-y:auto; flex:1;">
-        <a href="#" class="dash-item">🏠 Prematch</a>
-        <a href="#" class="dash-item">📡 Live Games</a>
-        <a href="#" class="dash-item">🚀 Aviator</a>
-        <a href="#" class="dash-item">🎰 Casino</a>
+    <div class="dash-header">
+        <span>PESA<span style="color:var(--neon-green)">CHAPCHAP</span></span>
+        <span onclick="toggleDash()" style="cursor:pointer">✕</span>
     </div>
-    <div class="pref-section">
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:15px;">PREFERENCES</div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <span>Data Saver</span>
-            <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span>Dark Mode</span>
-            <label class="switch">
-                <input type="checkbox" id="themeToggle">
-                <span class="slider"></span>
-            </label>
-        </div>
+    <div style="overflow-y:auto; flex:1;">
+        <div class="dash-item" onclick="toggleDash()">🏟️ Prematch</div>
+        <div class="dash-item" onclick="toggleDash()">📡 Live Games</div>
+        <div class="dash-item" onclick="openAviator()">🚀 Aviator <span style="background:var(--neon-red); font-size:0.6rem; padding:2px 5px; border-radius:5px;">HOT</span></div>
+        <div class="dash-item">🎰 Casino</div>
+    </div>
+</div>
+
+<div id="aviator-layer">
+    <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; background:#141a26;">
+        <div style="font-weight:900; color:var(--neon-red)">AVIATOR</div>
+        <div class="bal-box">KES <span id="av-bal">1000.00</span></div>
+        <button onclick="closeAviator()" style="background:none; border:none; color:#fff; font-size:1.5rem;">✕</button>
+    </div>
+    <div class="aviator-screen">
+        <div class="multiplier" id="mult-text">1.00x</div>
+        <div class="plane" id="plane">✈️</div>
+    </div>
+    <div class="aviator-controls">
+        <button class="bet-btn" id="bet-btn" onclick="startAviator()">BET (KES 100)</button>
+        <button class="cashout-btn" id="cashout-btn" onclick="cashout()">CASHOUT</button>
     </div>
 </div>
 
 <header>
     <div class="menu-trigger" onclick="toggleDash()">☰</div>
     <div style="font-weight:900; font-style:italic;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
-    <div class="bal-box">KES 0.00</div>
+    <div class="bal-box">KES <span id="main-bal">1000.00</span></div>
 </header>
-
-<div class="sports-nav">
-    <div class="sport-item active">⚽<br>Soccer</div>
-    <div class="sport-item">🚀<br>Aviator</div>
-    <div class="sport-item">🏆<br>Jackpots</div>
-</div>
-
-<div class="banner">🏆 OMOKA NA MIDWEEK 15M JACKPOT!</div>
 
 <div id="matchContainer"></div>
 
 <script>
+    let balance = 1000.00;
+    let running = false;
+    let currentMult = 1.00;
+    let interval;
+
     function toggleDash() {
         const dash = document.getElementById('dashboard');
         const overlay = document.getElementById('overlay');
@@ -116,16 +108,85 @@
         overlay.style.display = dash.classList.contains('active') ? 'block' : 'none';
     }
 
+    function openAviator() {
+        toggleDash();
+        document.getElementById('aviator-layer').style.display = 'flex';
+        updateBalances();
+    }
+
+    function closeAviator() {
+        document.getElementById('aviator-layer').style.display = 'none';
+        running = false;
+        clearInterval(interval);
+    }
+
+    function updateBalances() {
+        document.getElementById('main-bal').innerText = balance.toFixed(2);
+        document.getElementById('av-bal').innerText = balance.toFixed(2);
+    }
+
+    function startAviator() {
+        if(balance < 100) return alert("Insufficient Balance");
+        balance -= 100;
+        updateBalances();
+        
+        running = true;
+        currentMult = 1.00;
+        document.getElementById('bet-btn').style.display = 'none';
+        document.getElementById('cashout-btn').style.display = 'block';
+        
+        const plane = document.getElementById('plane');
+        const crashAt = (Math.random() * 5 + 1.1).toFixed(2);
+
+        interval = setInterval(() => {
+            currentMult += 0.01;
+            document.getElementById('mult-text').innerText = currentMult.toFixed(2) + "x";
+            
+            // Move plane
+            plane.style.bottom = (20 + (currentMult * 5)) + "%";
+            plane.style.left = (10 + (currentMult * 8)) + "%";
+
+            if(currentMult >= crashAt) {
+                clearInterval(interval);
+                running = false;
+                document.getElementById('mult-text').style.color = "var(--neon-red)";
+                document.getElementById('mult-text').innerText = "FLEW AWAY!";
+                setTimeout(resetAviator, 2000);
+            }
+        }, 50);
+    }
+
+    function cashout() {
+        if(!running) return;
+        let win = 100 * currentMult;
+        balance += win;
+        clearInterval(interval);
+        running = false;
+        alert("You won KES " + win.toFixed(2));
+        resetAviator();
+        updateBalances();
+    }
+
+    function resetAviator() {
+        clearInterval(interval);
+        document.getElementById('mult-text').style.color = "#fff";
+        document.getElementById('mult-text').innerText = "1.00x";
+        document.getElementById('bet-btn').style.display = 'block';
+        document.getElementById('cashout-btn').style.display = 'none';
+        document.getElementById('plane').style.bottom = "20%";
+        document.getElementById('plane').style.left = "10%";
+    }
+
     function renderMatches() {
         const container = document.getElementById('matchContainer');
         const games = [
-            { t1: 'Arsenal', t2: 'Liverpool', o1: '2.45', oX: '3.30', o2: '2.80' },
-            { t1: 'Man City', t2: 'Chelsea', o1: '1.55', oX: '4.20', o2: '5.60' }
+            { t1: 'Kenya', t2: 'Tanzania', o1: '2.10', oX: '3.10', o2: '3.40' },
+            { t1: 'Egypt', t2: 'Nigeria', o1: '1.95', oX: '3.20', o2: '4.20' }
         ];
         games.forEach(g => {
             container.innerHTML += `
                 <div class="match-row">
-                    <div style="font-size:0.65rem; color:var(--text-muted);">Soccer • Today, 20:00</div>
+                    <div style="font-size:0.65rem; color:var(--text-muted);">Soccer • Live Now</div>
                     <div class="match-main">
                         <div class="match-teams"><span class="team-name">${g.t1}</span><span class="team-name">${g.t2}</span></div>
                         <div class="odds-container">
