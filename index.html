@@ -3,150 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | All-in-One</title>
+    <title>Pesa ChapChap | Master</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-body: #0d121c;
-            --bg-card: #141a26;
-            --neon-green: #00e676;
-            --border: #1f2533;
-            --text-muted: #8e8fa3;
-            --dash-width: 280px;
-        }
-
-        body { background: var(--bg-body); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 70px; overflow-x: hidden; }
-
-        /* SIDEBAR & OVERLAY */
-        #dashboard {
-            position: fixed; top: 0; left: calc(-1 * var(--dash-width)); width: var(--dash-width);
-            height: 100%; background: #1c222e; z-index: 3000; transition: 0.3s;
-            display: flex; flex-direction: column; box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-        }
-        #dashboard.active { left: 0; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 2500; }
-        .dash-item { padding: 15px 20px; color: #fff; text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--border); cursor: pointer; }
-
-        /* HEADER */
-        header { 
-            background: #141a26; padding: 12px 15px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; 
-        }
+        :root { --bg: #0d121c; --card: #141a26; --green: #00e676; --border: #1f2533; --text: #8e8fa3; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 70px; }
+        
+        /* HEADER & NAVIGATION */
+        header { background: #141a26; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .bal-box { background: #ffee00; color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; }
-
-        /* SPORTS NAV */
         .sports-nav { display: flex; overflow-x: auto; padding: 12px; gap: 20px; background: #141a26; border-bottom: 1px solid var(--border); }
-        .sport-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; min-width: 60px; color: var(--text-muted); cursor: pointer; }
-        .sport-item.active { color: var(--neon-green); font-weight: bold; }
+        .sport-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; min-width: 60px; color: var(--text); cursor: pointer; }
+        .sport-item.active { color: var(--green); font-weight: bold; border-bottom: 2px solid var(--green); }
 
-        /* JACKPOT BANNER */
-        .banner { 
-            background: linear-gradient(90deg, #00e676, #b2ff59); 
-            margin: 12px; padding: 15px; border-radius: 10px; 
-            color: #000; text-align: center; font-weight: 900; font-size: 0.85rem;
-        }
-
-        /* MATCH ROWS */
+        /* SOCCER UI (Matches your Screenshots) */
+        .banner { background: linear-gradient(90deg, #00e676, #b2ff59); margin: 12px; padding: 15px; border-radius: 10px; color: #000; text-align: center; font-weight: 900; font-size: 0.85rem; }
         .match-row { padding: 15px; border-bottom: 1px solid var(--border); }
-        .match-teams { font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; }
+        .match-teams { font-weight: 600; font-size: 1rem; margin-bottom: 10px; }
         .odds-row { display: flex; gap: 8px; justify-content: flex-end; }
-        .btn-odd { background: #222834; border: 1px solid var(--border); color: #fff; border-radius: 6px; width: 65px; height: 42px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-        .market-link { color: var(--neon-green); font-size: 0.75rem; display: block; text-align: right; margin-top: 8px; text-decoration: none; }
+        .btn-odd { background: #222834; border: 1px solid var(--border); color: #fff; border-radius: 6px; width: 65px; height: 42px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+        .market-link { color: var(--green); font-size: 0.75rem; display: block; text-align: right; margin-top: 8px; text-decoration: none; }
 
-        /* CRASH GAME UI */
-        #crash-view { display: none; padding: 20px; text-align: center; }
-        .multiplier { font-size: 5rem; font-weight: 900; color: var(--neon-green); margin: 40px 0; }
-        .bet-btn { width: 100%; padding: 20px; background: var(--neon-green); border: none; border-radius: 10px; font-weight: 900; font-size: 1.2rem; }
+        /* CRASH UI (Matches your Original Game) */
+        #crash-view { display: none; padding: 10px; background: #0b0e15; }
+        .history-bar { display: flex; gap: 8px; padding: 10px 0; overflow-x: auto; }
+        .hist-chip { background: #1c222e; color: #4fc3f7; padding: 4px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(79,195,247,0.2); }
+        .game-canvas { height: 260px; background: radial-gradient(circle, #1a2233 0%, #0b0e15 100%); border-radius: 12px; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .multiplier { font-size: 4.5rem; font-weight: 900; color: var(--green); }
+        .bet-panel { background: #1c222e; padding: 15px; border-radius: 12px; margin-top: 10px; }
+        .bet-btn { width: 100%; padding: 18px; background: var(--green); border: none; border-radius: 10px; font-weight: 900; font-size: 1.1rem; color: #fff; }
 
         /* BOTTOM NAV */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: #141a26; 
-            display: flex; justify-content: space-around; padding: 12px 0; 
-            border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--text-muted);
-        }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #141a26; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
+        .nav-link { text-align: center; font-size: 0.7rem; color: var(--text); text-decoration: none; }
     </style>
 </head>
 <body>
 
-<div id="overlay" onclick="toggleDash()"></div>
-
-<div id="dashboard">
-    <div style="padding: 20px; font-weight: 900;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
-    <div onclick="showSection('sports')" class="dash-item">⚽ Soccer</div>
-    <div onclick="showSection('crash')" class="dash-item">📈 Omoka Crash</div>
-    <div class="dash-item">🏆 Jackpots</div>
-</div>
-
 <header>
-    <div onclick="toggleDash()" style="font-size:1.5rem; cursor:pointer;">☰</div>
-    <div style="font-weight:900;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
+    <div style="font-size:1.5rem;">☰</div>
+    <div style="font-weight:900; font-style:italic;">PESA<span style="color:var(--green)">CHAPCHAP</span></div>
     <div class="bal-box">KES <span id="balance">1000.00</span></div>
 </header>
 
-<div id="sports-view">
+<div id="home-view">
     <div class="sports-nav">
-        <div class="sport-item active" onclick="showSection('sports')">⚽<br>Soccer</div>
-        <div class="sport-item" onclick="showSection('crash')">🚀<br>Aviator</div>
+        <div class="sport-item active" onclick="switchView('home')">⚽<br>Soccer</div>
+        <div class="sport-item" onclick="switchView('crash')">🚀<br>Aviator</div>
         <div class="sport-item">🏆<br>Jackpots</div>
         <div class="sport-item">🎰<br>Casino</div>
     </div>
-
     <div class="banner">🏆 OMOKA NA MIDWEEK 15M JACKPOT!</div>
-
-    <div id="matchContainer"></div>
+    <div id="matches"></div>
 </div>
 
 <div id="crash-view">
-    <div class="multiplier" id="mult">1.00x</div>
-    <button class="bet-btn" onclick="startCrash()">PLACE BET</button>
-    <button style="margin-top:20px; background:none; border:1px solid #fff; color:#fff; padding:10px; border-radius:5px;" onclick="showSection('sports')">Back to Soccer</button>
+    <div class="history-bar">
+        <div class="hist-chip">1.40x</div><div class="hist-chip">107.94x</div><div class="hist-chip">3.91x</div><div class="hist-chip">1.25x</div>
+    </div>
+    <div class="game-canvas">
+        <div class="multiplier" id="mult">1.00x</div>
+        <div style="color:var(--text); text-transform:uppercase; font-size:0.7rem; letter-spacing:2px;">Flying Away</div>
+    </div>
+    <div class="bet-panel">
+        <button class="bet-btn" onclick="runCrash()">BET 10.00 KES</button>
+    </div>
 </div>
 
 <nav class="bottom-nav">
-    <div style="color:var(--neon-green)">🏠<br>Home</div>
-    <div>📡<br>Live</div>
-    <div>🧾<br>My Bets</div>
-    <div>👤<br>Account</div>
+    <a href="#" class="nav-link" onclick="switchView('home')" style="color:var(--green)">🏠<br>Home</a>
+    <a href="#" class="nav-link">📡<br>Live</a>
+    <a href="#" class="nav-link">🧾<br>My Bets</a>
+    <a href="#" class="nav-link" onclick="switchView('crash')">🚀<br>Omoka</a>
 </nav>
 
 <script>
-    let bal = 1000.00;
-
-    function toggleDash() {
-        const d = document.getElementById('dashboard');
-        const o = document.getElementById('overlay');
-        d.classList.toggle('active');
-        o.style.display = d.classList.contains('active') ? 'block' : 'none';
+    function switchView(v) {
+        document.getElementById('home-view').style.display = v === 'home' ? 'block' : 'none';
+        document.getElementById('crash-view').style.display = v === 'crash' ? 'block' : 'none';
     }
 
-    function showSection(section) {
-        document.getElementById('sports-view').style.display = section === 'sports' ? 'block' : 'none';
-        document.getElementById('crash-view').style.display = section === 'crash' ? 'block' : 'none';
-        if(document.getElementById('dashboard').classList.contains('active')) toggleDash();
-    }
-
-    function renderMatches() {
-        const container = document.getElementById('matchContainer');
-        const games = [
+    function render() {
+        const div = document.getElementById('matches');
+        const data = [
             { t1: 'Brazil', t2: 'Croatia', o1: '1.78', oX: '3.90', o2: '4.10', m: '78' },
             { t1: 'Mexico', t2: 'Belgium', o1: '3.60', oX: '3.50', o2: '2.02', m: '84' }
         ];
-        games.forEach(g => {
-            container.innerHTML += `
-                <div class="match-row">
-                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:5px;">⚽ Soccer • International</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div class="match-teams">${g.t1}<br>${g.t2}</div>
-                        <div class="odds-row">
-                            <div class="btn-odd">${g.o1}</div><div class="btn-odd">${g.oX}</div><div class="btn-odd">${g.o2}</div>
-                        </div>
+        data.forEach(m => {
+            div.innerHTML += `<div class="match-row">
+                <div style="font-size:0.65rem; color:var(--text); margin-bottom:5px;">⚽ Soccer • Today, 21:00</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="match-teams">${m.t1}<br>${m.t2}</div>
+                    <div class="odds-row">
+                        <div class="btn-odd"><span>1</span>${m.o1}</div>
+                        <div class="btn-odd"><span>X</span>${m.oX}</div>
+                        <div class="btn-odd"><span>2</span>${m.o2}</div>
                     </div>
-                    <a href="#" class="market-link">+${g.m} Markets</a>
-                </div>`;
+                </div>
+                <a href="#" class="market-link">+${m.m} Markets</a>
+            </div>`;
         });
     }
-    renderMatches();
+
+    let active = false;
+    function runCrash() {
+        if(active) return; active = true;
+        let c = 1.0;
+        let t = setInterval(() => {
+            c += 0.01;
+            document.getElementById('mult').innerText = c.toFixed(2) + "x";
+            if(Math.random() < 0.008) {
+                clearInterval(t);
+                document.getElementById('mult').style.color = "red";
+                setTimeout(() => { 
+                    document.getElementById('mult').style.color = "var(--green)";
+                    document.getElementById('mult').innerText = "1.00x";
+                    active = false; 
+                }, 2000);
+            }
+        }, 50);
+    }
+    render();
 </script>
 </body>
 </html>
