@@ -1,5 +1,10 @@
+# Pesa Chapchap - Python dependencies
+# All standard library — no pip install needed
+# server.py uses: http.server, socketserver, json, urllib, threading,
+#                 time, os, re, string, random, hashlib, datetime
+# All built into Python 3.x — zero external packages required
+
 fastapi
 uvicorn
 jinja2
 python-multipart
-yt-dlp
