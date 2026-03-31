@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Pro</title>
+    <title>Pesa ChapChap | Pro Markets</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,139 +17,97 @@
             --odd-bg: #222834;
         }
 
-        .light-theme {
-            --bg-deep: #f4f4f7;
-            --bg-card: #ffffff;
-            --text-main: #1a1e29;
-            --text-muted: #666;
-            --border: #e0e0e0;
-            --dash-bg: #ffffff;
-            --odd-bg: #e0e0e0;
-        }
-
-        body { 
-            background: var(--bg-deep); 
-            color: var(--text-main); 
-            font-family: 'Inter', sans-serif; /* Professional Typography */
-            margin: 0; 
-            padding-bottom: 30px; 
-            transition: 0.3s; 
-        }
+        body { background: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; transition: 0.3s; }
 
         /* HEADER */
-        header { 
-            background: var(--bg-card); padding: 10px 15px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; 
-        }
-        .menu-trigger { font-size: 1.5rem; cursor: pointer; }
+        header { background: var(--bg-card); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .bal-box { background: #ffee00; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
 
-        /* MATCH LAYOUT */
-        .odds-header { display: flex; padding: 10px 15px; font-size: 0.7rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.5px;}
+        /* MATCH STYLES */
         .match-row { display: flex; flex-direction: column; padding: 15px; border-bottom: 1px solid var(--border); }
-        .match-top-info { display: flex; justify-content: space-between; align-items: center; }
-        
         .match-main { display: flex; align-items: center; margin-top: 10px; }
         .match-teams { flex: 2; display: flex; flex-direction: column; gap: 4px; }
         .team-name { font-weight: 600; font-size: 0.95rem; }
-        .match-meta { font-size: 0.65rem; color: var(--text-muted); }
-
         .odds-container { flex: 3; display: flex; gap: 8px; justify-content: flex-end; }
-        .btn-odd { 
-            background: var(--odd-bg); border: 1px solid var(--border); color: var(--text-main); 
-            border-radius: 8px; width: 62px; height: 42px; display: flex; 
-            align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; 
-        }
+        .btn-odd { background: var(--odd-bg); border: 1px solid var(--border); color: var(--text-main); border-radius: 8px; width: 62px; height: 42px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+        
+        .market-link { align-self: flex-end; font-size: 0.7rem; color: var(--neon-green); margin-top: 8px; font-weight: 600; cursor: pointer; }
 
-        /* MARKET COUNT (The "+78 Markets" style) */
-        .market-link { 
-            align-self: flex-end; font-size: 0.7rem; color: var(--neon-green); 
-            margin-top: 8px; font-weight: 600; text-decoration: none;
+        /* MARKET DRAWER (Bottom Sheet) */
+        #marketDrawer {
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 70%;
+            background: var(--dash-bg); z-index: 3000; transition: 0.4s cubic-bezier(0, 0, 0.2, 1);
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+            display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;
         }
-
-        /* DASHBOARD & UTILS (Keep existing logic) */
-        #dashboard { position: fixed; top: 0; left: -100%; width: 85%; height: 100%; background: var(--dash-bg); z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; box-shadow: 10px 0 20px rgba(0,0,0,0.5); }
-        #dashboard.active { left: 0; }
-        .dash-item { display: flex; align-items: center; padding: 18px 20px; text-decoration: none; color: var(--text-main); font-weight: 600; border-bottom: 1px solid var(--border); }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1500; }
-        .banner { background: linear-gradient(90deg, #00e676, #b2ff59); margin: 12px; padding: 18px; border-radius: 12px; color: #000; text-align: center; font-weight: 800; font-size: 0.9rem; }
+        #marketDrawer.active { bottom: 0; }
+        .drawer-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .market-group { margin-bottom: 20px; }
+        .market-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+        .market-odds-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 2500; }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
-<div id="overlay" onclick="toggleDash()"></div>
-
-<div id="dashboard">
-    <div style="padding: 20px; font-weight: 800; border-bottom: 1px solid var(--border);">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
-    <div class="dash-scroll">
-        <a href="#" class="dash-item">🏟️ Prematch</a>
-        <a href="#" class="dash-item">📡 Live Games</a>
-        <a href="/play" class="dash-item">🚀 Aviator</a>
-    </div>
-</div>
+<div id="overlay" onclick="closeDrawer()"></div>
 
 <header>
-    <div class="menu-trigger" onclick="toggleDash()">☰</div>
-    <div style="font-weight:800; font-style:italic; letter-spacing:-0.5px;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
-    <div class="bal-box">KES <span id="userBal">0.00</span></div>
+    <div style="font-size: 1.5rem;">☰</div>
+    <div style="font-weight:800; font-style:italic;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
+    <div class="bal-box">KES 0.00</div>
 </header>
-
-<div class="banner" data-key="jackpot_txt">🏆 OMOKA NA MIDWEEK 15M JACKPOT!</div>
-
-<div class="odds-header">
-    <div style="flex:2">Upcoming Matches</div>
-    <div style="flex:3; display:flex; justify-content:flex-end; gap:48px; padding-right:15px;"><span>1</span><span>X</span><span>2</span></div>
-</div>
 
 <div id="matchContainer"></div>
 
+<div id="marketDrawer">
+    <div class="drawer-header">
+        <div id="drawerMatchName" style="font-weight:800;">Match Details</div>
+        <div onclick="closeDrawer()" style="cursor:pointer; color:var(--text-muted);">✕</div>
+    </div>
+    <div style="overflow-y:auto;">
+        <div class="market-group">
+            <div class="market-title">Double Chance</div>
+            <div class="market-odds-grid">
+                <div class="btn-odd" style="width:100%">1X <br> 1.25</div>
+                <div class="btn-odd" style="width:100%">12 <br> 1.30</div>
+                <div class="btn-odd" style="width:100%">X2 <br> 1.45</div>
+            </div>
+        </div>
+        <div class="market-group">
+            <div class="market-title">Both Teams To Score</div>
+            <div class="market-odds-grid">
+                <div class="btn-odd" style="width:100%">Yes <br> 1.80</div>
+                <div class="btn-odd" style="width:100%">No <br> 1.95</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    function toggleDash() {
-        const dash = document.getElementById('dashboard');
-        const overlay = document.getElementById('overlay');
-        dash.classList.toggle('active');
-        overlay.style.display = dash.classList.contains('active') ? 'block' : 'none';
+    function openMarkets(t1, t2) {
+        document.getElementById('drawerMatchName').innerText = t1 + " vs " + t2;
+        document.getElementById('marketDrawer').classList.add('active');
+        document.getElementById('overlay').style.display = 'block';
     }
 
-    function generateMatches(count) {
-        const container = document.getElementById('matchContainer');
-        const teams = ["Arsenal", "Man City", "Chelsea", "Liverpool", "Real Madrid", "Barcelona", "PSG", "Bayern", "Gor Mahia", "Tusker FC"];
-        
-        for (let i = 0; i < count; i++) {
-            let t1 = teams[Math.floor(Math.random() * teams.length)];
-            let t2 = teams[Math.floor(Math.random() * teams.length)];
-            while(t1 === t2) t2 = teams[Math.floor(Math.random() * teams.length)];
-            
-            // Random market count (e.g., +45 Markets)
-            const markets = Math.floor(Math.random() * 60) + 30;
+    function closeDrawer() {
+        document.getElementById('marketDrawer').classList.remove('active');
+        document.getElementById('overlay').style.display = 'none';
+    }
 
-            container.innerHTML += `
-                <div class="match-row">
-                    <div class="match-top-info">
-                        <div class="match-meta">⚽ Soccer • Today, ${15 + i}:00</div>
-                        <div class="match-meta">01/04</div>
-                    </div>
-                    <div class="match-main">
-                        <div class="match-teams">
-                            <span class="team-name">${t1}</span>
-                            <span class="team-name">${t2}</span>
-                        </div>
-                        <div class="odds-container">
-                            <div class="btn-odd">${(Math.random() * 2 + 1.1).toFixed(2)}</div>
-                            <div class="btn-odd">${(Math.random() * 1.5 + 2.5).toFixed(2)}</div>
-                            <div class="btn-odd">${(Math.random() * 3 + 1.8).toFixed(2)}</div>
-                        </div>
-                    </div>
-                    <a href="#" class="market-link">+${markets} Markets</a>
-                </div>`;
+    function generateMatches() {
+        const container = document.getElementById('matchContainer');
+        const teams = ["Arsenal", "Man City", "Chelsea", "Liverpool", "Real Madrid", "Barcelona"];
+        
+        for (let i = 0; i < 5; i++) {
+            let t1 = teams[i % teams.length];
+            let t2 = teams[(i+1) % teams.length];
+            container.innerHTML += ;
         }
     }
-
-    // Init
-    let rawBal = localStorage.getItem('pesa_balance');
-    document.getElementById('userBal').innerText = (rawBal === null || rawBal === "NaN") ? "0.00" : parseFloat(rawBal).toFixed(2);
-    generateMatches(10);
+    generateMatches();
 </script>
 </body>
 </html>
