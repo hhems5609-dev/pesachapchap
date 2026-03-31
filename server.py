@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
+# Make sure static exists so Render doesn't throw a warning
 if not os.path.exists("static"):
     os.makedirs("static")
 
@@ -14,6 +15,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def index(request: Request):
+    # This must be exactly like this: {"request": request}
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/play")
@@ -23,3 +25,4 @@ async def play_video(request: Request):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
+
