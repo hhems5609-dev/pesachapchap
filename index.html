@@ -3,108 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesa ChapChap | Pro Markets</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Pesa ChapChap | Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-deep: #0d121c;
-            --bg-card: #141a26;
             --neon-green: #00e676;
             --text-main: #ffffff;
-            --text-muted: #8e8fa3;
-            --border: #1f2533;
-            --dash-bg: #1c222e;
-            --odd-bg: #222834;
         }
 
-        body { background: var(--bg-deep); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; transition: 0.3s; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', sans-serif; background: var(--bg-deep); overflow: hidden; }
 
-        /* HEADER */
-        header { background: var(--bg-card); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        .bal-box { background: #ffee00; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
-
-        /* MATCH STYLES */
-        .match-row { display: flex; flex-direction: column; padding: 15px; border-bottom: 1px solid var(--border); }
-        .match-main { display: flex; align-items: center; margin-top: 10px; }
-        .match-teams { flex: 2; display: flex; flex-direction: column; gap: 4px; }
-        .team-name { font-weight: 600; font-size: 0.95rem; }
-        .odds-container { flex: 3; display: flex; gap: 8px; justify-content: flex-end; }
-        .btn-odd { background: var(--odd-bg); border: 1px solid var(--border); color: var(--text-main); border-radius: 8px; width: 62px; height: 42px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
-        
-        .market-link { align-self: flex-end; font-size: 0.7rem; color: var(--neon-green); margin-top: 8px; font-weight: 600; cursor: pointer; }
-
-        /* MARKET DRAWER (Bottom Sheet) */
-        #marketDrawer {
-            position: fixed; bottom: -100%; left: 0; width: 100%; height: 70%;
-            background: var(--dash-bg); z-index: 3000; transition: 0.4s cubic-bezier(0, 0, 0.2, 1);
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
-            display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;
+        /* STYLISH OPENING PAGE (SPLASH) */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a2233 0%, #0d121c 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        #marketDrawer.active { bottom: 0; }
-        .drawer-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .market-group { margin-bottom: 20px; }
-        .market-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
-        .market-odds-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .logo-container { text-align: center; animation: zoomIn 1.2s ease-out; }
         
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 2500; }
+        .splash-logo {
+            font-size: 3rem; font-weight: 900; letter-spacing: -2px; font-style: italic;
+            color: #fff; text-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+        }
+        .splash-logo span { color: var(--neon-green); }
+
+        .tagline {
+            color: #8e8fa3; font-size: 0.9rem; margin-top: 10px; 
+            letter-spacing: 3px; text-transform: uppercase; opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.8s forwards;
+        }
+
+        .loader-bar {
+            width: 150px; height: 3px; background: rgba(255,255,255,0.1);
+            margin-top: 30px; border-radius: 10px; overflow: hidden;
+        }
+        .loader-progress {
+            width: 0%; height: 100%; background: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: load 2.5s ease-in-out forwards;
+        }
+
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes load { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
+
+        /* HIDE CONTENT INITIALLY */
+        #main-app { opacity: 0; visibility: hidden; transition: opacity 1s ease; }
+        #main-app.show { opacity: 1; visibility: visible; overflow-y: auto; height: 100%; }
+
+        /* RE-USING YOUR STYLES BELOW */
+        header { background: #141a26; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2533; }
+        .bal-box { background: #ffee00; color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-<div id="overlay" onclick="closeDrawer()"></div>
-
-<header>
-    <div style="font-size: 1.5rem;">☰</div>
-    <div style="font-weight:800; font-style:italic;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
-    <div class="bal-box">KES 0.00</div>
-</header>
-
-<div id="matchContainer"></div>
-
-<div id="marketDrawer">
-    <div class="drawer-header">
-        <div id="drawerMatchName" style="font-weight:800;">Match Details</div>
-        <div onclick="closeDrawer()" style="cursor:pointer; color:var(--text-muted);">✕</div>
+<div id="splash-screen">
+    <div class="logo-container">
+        <div class="splash-logo">PESA<span>CHAPCHAP</span></div>
+        <div class="tagline">Win Fast. Win Big.</div>
     </div>
-    <div style="overflow-y:auto;">
-        <div class="market-group">
-            <div class="market-title">Double Chance</div>
-            <div class="market-odds-grid">
-                <div class="btn-odd" style="width:100%">1X <br> 1.25</div>
-                <div class="btn-odd" style="width:100%">12 <br> 1.30</div>
-                <div class="btn-odd" style="width:100%">X2 <br> 1.45</div>
-            </div>
-        </div>
-        <div class="market-group">
-            <div class="market-title">Both Teams To Score</div>
-            <div class="market-odds-grid">
-                <div class="btn-odd" style="width:100%">Yes <br> 1.80</div>
-                <div class="btn-odd" style="width:100%">No <br> 1.95</div>
-            </div>
-        </div>
+    <div class="loader-bar">
+        <div class="loader-progress"></div>
+    </div>
+</div>
+
+<div id="main-app">
+    <header>
+        <div style="font-size: 1.5rem; color: #fff;">☰</div>
+        <div style="font-weight:900; color: #fff; font-style: italic;">PESA<span style="color:var(--neon-green)">CHAPCHAP</span></div>
+        <div class="bal-box">KES 0.00</div>
+    </header>
+    
+    <div style="padding: 20px; color: #fff; text-align: center;">
+        <h2 style="color: var(--neon-green);">Karibu Tena!</h2>
+        <p style="color: #8e8fa3;">Loading the latest odds for you...</p>
+        <div id="matchContainer"></div>
     </div>
 </div>
 
 <script>
-    function openMarkets(t1, t2) {
-        document.getElementById('drawerMatchName').innerText = t1 + " vs " + t2;
-        document.getElementById('marketDrawer').classList.add('active');
-        document.getElementById('overlay').style.display = 'block';
-    }
+    // Reveal App after opening page animation
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            const app = document.getElementById('main-app');
+            
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                app.classList.add('show');
+                document.body.style.overflow = 'auto';
+            }, 800);
+        }, 2800); // Progress bar finishes at 2.5s, app reveals at 2.8s
+    });
 
-    function closeDrawer() {
-        document.getElementById('marketDrawer').classList.remove('active');
-        document.getElementById('overlay').style.display = 'none';
-    }
-
+    // Your existing match generation logic
     function generateMatches() {
         const container = document.getElementById('matchContainer');
-        const teams = ["Arsenal", "Man City", "Chelsea", "Liverpool", "Real Madrid", "Barcelona"];
-        
-        for (let i = 0; i < 5; i++) {
-            let t1 = teams[i % teams.length];
-            let t2 = teams[(i+1) % teams.length];
-            container.innerHTML += ;
+        const teams = ["Arsenal", "Man City", "Real Madrid", "Liverpool"];
+        for (let i = 0; i < 4; i++) {
+            container.innerHTML += `
+                <div style="background:#141a26; margin-bottom:10px; padding:15px; border-radius:10px; border:1px solid #1f2533; text-align:left;">
+                    <div style="font-size:0.8rem; color:#8e8fa3; margin-bottom:5px;">Today, 21:00</div>
+                    <div style="font-weight:600;">${teams[i]} vs Chelsea</div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button style="flex:1; background:#222834; border:1px solid #1f2533; color:#fff; padding:10px; border-radius:5px;">1.85</button>
+                        <button style="flex:1; background:#222834; border:1px solid #1f2533; color:#fff; padding:10px; border-radius:5px;">3.40</button>
+                        <button style="flex:1; background:#222834; border:1px solid #1f2533; color:#fff; padding:10px; border-radius:5px;">4.10</button>
+                    </div>
+                </div>`;
         }
     }
     generateMatches();
