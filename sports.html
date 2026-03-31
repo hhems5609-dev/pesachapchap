@@ -1,44 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sports | Pesa Chapchap</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Sports | Pesa ChapChap</title>
     <style>
-        body { background: #0b011d; color: white; font-family: sans-serif; padding: 10px; }
-        .match { background: #1a1a35; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #2a2a50; }
-        .teams { display: flex; justify-content: space-between; font-weight: bold; }
-        .odds { display: flex; gap: 10px; margin-top: 10px; }
-        .odd-btn { flex: 1; background: #2a2a50; padding: 10px; border-radius: 5px; text-align: center; border: 1px solid #00e676; cursor: pointer; }
-        .odd-btn:active { background: #00e676; color: black; }
+        body { background: #0b011d; color: white; font-family: sans-serif; margin: 0; padding: 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #1a1a35; border-radius: 10px; margin-bottom: 15px; }
+        .back-btn { color: #00e676; text-decoration: none; font-weight: bold; }
+        
+        /* Customizing the Widget area */
+        #livescore-widget { background: #1a1a35; border-radius: 12px; padding: 5px; min-height: 500px; }
     </style>
 </head>
 <body>
-    <h3>⚽ Football - Live Odds</h3>
-    
-    <div class="match">
-        <div class="teams"><span>Man Utd</span> vs <span>Arsenal</span></div>
-        <div class="odds">
-            <div class="odd-btn" onclick="bet(2.10)">1<br>2.10</div>
-            <div class="odd-btn" onclick="bet(3.40)">X<br>3.40</div>
-            <div class="odd-btn" onclick="bet(1.95)">2<br>1.95</div>
-        </div>
-    </div>
 
-    <div class="match">
-        <div class="teams"><span>Real Madrid</span> vs <span>Barca</span></div>
-        <div class="odds">
-            <div class="odd-btn" onclick="bet(1.80)">1<br>1.80</div>
-            <div class="odd-btn" onclick="bet(3.10)">X<br>3.10</div>
-            <div class="odd-btn" onclick="bet(2.50)">2<br>2.50</div>
-        </div>
-    </div>
+<div class="header">
+    <a href="/" class="back-btn">⬅ BACK</a>
+    <span>⚽ LIVE FOOTBALL</span>
+</div>
 
-    <script>
-        function bet(odd) {
-            let stake = prompt("Enter Stake Amount:");
-            if(!stake) return;
-            alert("Bet Placed! Potential Win: KES " + (stake * odd).toFixed(2));
-        }
-    </script>
+<div id="livescore-widget">
+    <iframe src="https://www.scorebat.com/embed/livescore/" 
+            frameborder="0" width="100%" height="600" 
+            allowfullscreen allow="autoplay; fullscreen" 
+            style="width: 100%; height: 600px; overflow: auto; border-radius: 10px;">
+    </iframe>
+</div>
+
+<footer>
+    <p style="text-align:center; font-size: 0.7rem; color: #666;">Data provided by ScoreBat API</p>
+</footer>
+
 </body>
 </html>

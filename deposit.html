@@ -1,31 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Deposit | Pesa Chapchap</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit | Pesa ChapChap</title>
     <style>
-        body { background: #0b011d; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { background: #1a1a35; padding: 20px; border-radius: 15px; border: 1px solid #00e676; margin-top: 20px; }
-        input { width: 80%; padding: 15px; margin: 10px 0; border-radius: 5px; border: none; font-size: 1.1rem; }
-        .btn { background: #00e676; color: black; padding: 15px 30px; border: none; border-radius: 5px; font-weight: bold; width: 100%; cursor: pointer; }
+        body { background: #0d121c; color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .header { display: flex; align-items: center; margin-bottom: 30px; }
+        .back-btn { font-size: 1.5rem; color: #ffee00; text-decoration: none; margin-right: 20px; }
+        .mpesa-logo { background: #00e676; color: white; padding: 10px; border-radius: 10px; font-weight: bold; display: inline-block; margin-bottom: 20px; }
+        .input-group { background: #1a1a35; padding: 20px; border-radius: 15px; border: 1px solid #242a36; }
+        input { width: 90%; padding: 15px; border-radius: 8px; border: 1px solid #333; background: #0b0f16; color: white; font-size: 1.1rem; margin-top: 10px; }
+        .deposit-btn { background: #ffee00; color: black; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 800; font-size: 1.1rem; margin-top: 20px; cursor: pointer; }
+        .info { font-size: 0.8rem; color: #8c8f94; margin-top: 15px; }
     </style>
 </head>
 <body>
-    <h2>💳 Deposit via M-PESA</h2>
-    <div class="card">
-        <p>Enter Amount to Deposit</p>
-        <input type="number" id="amount" placeholder="KES e.g. 500">
-        <button class="btn" onclick="processDeposit()">STK PUSH</button>
-    </div>
-    <script>
-        function processDeposit() {
-            let amt = document.getElementById('amount').value;
-            if(amt < 1) return alert("Enter valid amount");
-            alert("STK Push Sent to your phone! (Simulated)");
-            let bal = parseFloat(localStorage.getItem('pesa_balance') || 0);
-            localStorage.setItem('pesa_balance', (bal + parseFloat(amt)).toFixed(2));
+
+<div class="header">
+    <a href="/" class="back-btn">←</a>
+    <h2>DEPOSIT MONEY</h2>
+</div>
+
+<div class="mpesa-logo">M-PESA EXPRESS</div>
+
+<div class="input-group">
+    <label>Amount (Min 10 KES)</label><br>
+    <input type="number" id="depAmount" placeholder="Enter Amount" value="100">
+    <button class="deposit-btn" onclick="sendSTK()">DEPOSIT NOW</button>
+</div>
+
+<p class="info">Enter your M-Pesa PIN on the popup that will appear on your phone.</p>
+
+<script>
+    function sendSTK() {
+        const amt = document.getElementById('depAmount').value;
+        if(amt < 10) return alert("Minimum deposit is 10 KES");
+        
+        alert("STK Push Sent to your phone! Please enter your PIN.");
+        
+        // Simulating a successful deposit for now
+        let currentBal = parseFloat(localStorage.getItem('pesa_balance') || 0);
+        localStorage.setItem('pesa_balance', (currentBal + parseFloat(amt)).toFixed(2));
+        
+        setTimeout(() => {
             window.location.href = '/';
-        }
-    </script>
+        }, 2000);
+    }
+</script>
+
 </body>
 </html>
